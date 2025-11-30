@@ -1,4 +1,3 @@
-eval "$(starship init zsh)"
 
 ZIM_CONFIG_FILE=~/.config/zsh/.zimrc
 ZIM_HOME=~/.config/zsh/.zim
@@ -11,9 +10,12 @@ fi
 if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZIM_CONFIG_FILE:-${ZDOTDIR:-${HOME}}/.zimrc} ]]; then
   source ${ZIM_HOME}/zimfw.zsh init
 fi
-
+# perf optimize
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+
 
 source ${ZIM_HOME}/init.zsh
 source ${ZDOTDIR}/.zshenv
 source ${ZDOTDIR}/.aliases
+
+eval "$(starship init zsh)"
