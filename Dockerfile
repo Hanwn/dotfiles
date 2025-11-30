@@ -13,7 +13,7 @@ RUN set -eux; \
 RUN set -eux ; \ 
     apk update ;\
     apk add --no-cache \
-    bash curl git git-lfs openssh-client openssh-server sudo shadow tzdata lazygit \
+    bash curl git git-lfs openssh-client openssh-server sudo shadow tzdata\
     nodejs \
     lua5.4 \
     go delve \
@@ -21,7 +21,7 @@ RUN set -eux ; \
     g++ gcc cmake \
     python3 uv\
     neovim ripgrep fd fzf bat delta\
-    zsh starship\
+    zsh starship yazi lazygit \
     stow \
     protobuf protoc \
     typst
