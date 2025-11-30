@@ -1,8 +1,0 @@
-[user]
-	name = Hanwn
-	email = hanwn7721@gmail.com
-[core]
-	pager = delta
-[delta]
-	syntax-theme=Onedark
-	features=side-by-side line-number
