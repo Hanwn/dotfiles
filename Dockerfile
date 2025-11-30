@@ -22,6 +22,7 @@ RUN set -eux ; \
     python3 uv\
     neovim ripgrep fd fzf bat delta\
     zsh starship\
+    stow \
     protobuf protoc \
     typst
 
