@@ -30,7 +30,7 @@ RUN set -eux ; \
 RUN mkdir /var/run/sshd ;\
     sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config ;\
     # sed -i 's/UsePAM yes/UsePAM no/' /etc/ssh/sshd_config \
-    sed -i 's/#Port 22/Port 36001/' /etc/ssh/sshd_config ;\
+    # sed -i 's/#Port 22/Port 36000/' /etc/ssh/sshd_config ;\
     ssh-keygen -t rsa -f /etc/ssh/ssh_host_rsa_key -N '' ;\
     ssh-keygen -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N '' ;\
     ssh-keygen -t ed25519 -f /etc/ssh/ssh_host_ed25519_key -N ''
