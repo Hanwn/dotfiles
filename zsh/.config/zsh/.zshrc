@@ -13,9 +13,11 @@ fi
 # perf optimize
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 
-if command -v fzf >/dev/null 2>&1; then
-    source <(fzf --zsh)
-fi
+
+
+# load plugins
+[[ -d ${ZDOTDIR}/plugins ]] && for f in ${ZDOTDIR}/plugins/*.zsh(.N); source $f
+
 
 source ${ZIM_HOME}/init.zsh
 source ${ZDOTDIR}/.zshenv
