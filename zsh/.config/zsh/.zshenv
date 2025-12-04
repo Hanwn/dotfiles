@@ -1,5 +1,7 @@
 
 
+export LANGUAGE=en_US
+
 # go settings
 export GOPATH="$(go env GOPATH 2>/dev/null || echo "$HOME/go")"
 export GO111MODULE="on"

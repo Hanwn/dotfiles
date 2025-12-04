@@ -58,3 +58,5 @@ zmodule zsh-users/zsh-autosuggestions
 # }}} End configuration added by Zim Framework install
 
 zmodule https://github.com/agkozak/zsh-z
+
+zmodule Aloxaf/fzf-tab

@@ -13,6 +13,9 @@ fi
 # perf optimize
 ZSH_AUTOSUGGEST_MANUAL_REBIND=1
 
+autoload -Uz compinit bashcompinit
+compinit
+bashcompinit
 
 
 # load plugins
