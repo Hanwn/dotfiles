@@ -38,16 +38,12 @@ RUN mkdir /var/run/sshd ;\
 
 RUN set -eux; \
     mkdir -p /data/workspace && chmod 755 /data/workspace && chown root:root /data/workspace; \
-    ROOT_PASS=$(head -c 16 /dev/urandom | tr -dc 'A-Za-z0-9!@#$%^&*' | head -c 12); \
-    DEV_PASS=$(head -c 16 /dev/urandom | tr -dc 'A-Za-z0-9!@#$%^&*' | head -c 12); \
-    echo "root:$ROOT_PASS" | chpasswd; \
     useradd -m -d /home/${DEVELOPER} -s /bin/zsh ${DEVELOPER}; \
     chown -R ${DEVELOPER}:${DEVELOPER} /data/workspace; \
-    echo "${DEVELOPER}:$DEV_PASS" | chpasswd; \
+    echo "${DEVELOPER}:123456" | chpasswd; \
     echo "${DEVELOPER} ALL=(ALL:ALL) NOPASSWD: ALL" > /etc/sudoers.d/${DEVELOPER}-nopasswd; \
     chmod 0440 /etc/sudoers.d/${DEVELOPER}-nopasswd; \
-    echo "ROOT_PASSWORD=$ROOT_PASS" > /etc/environment; \
-    echo "MYUSER_PASSWORD=$DEV_PASS" >> /etc/environment
+    chage -d 0 ${DEVELOPER};
 
 
 RUN set -eux; \
