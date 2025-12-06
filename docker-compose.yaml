@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  devbox:
+    build: .
+    image: debox:latest
+    ports:
+      - "36000:22"
+    restart: unless-stopped
