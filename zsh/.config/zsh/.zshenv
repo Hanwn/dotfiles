@@ -14,4 +14,4 @@ export VISUAL=nvim
 
 
 # path config
-export PATH="$GOPATH/bin:$PATH"
+export PATH="$GOPATH/bin:$HOME/.local/bin:$PATH"
