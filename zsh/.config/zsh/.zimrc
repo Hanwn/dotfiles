@@ -17,6 +17,10 @@ zmodule input
 zmodule termtitle
 # Utility aliases and functions. Adds colour to ls, grep and less.
 zmodule utility
+# vim-mode
+zmodule jeffreytse/zsh-vi-mode
+# repeat cmd excuted without sudo
+zmodule zap-zsh/sudo
 
 # <-- Normally new modules should be added here. Check each module documentation
 # for any caveats.
