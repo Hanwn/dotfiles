@@ -1,5 +1,6 @@
 zmodule jeffreytse/zsh-vi-mode
 zmodule zap-zsh/sudo
+zmodule utility
 
 zmodule zsh-users/zsh-syntax-highlighting
 zmodule zsh-users/zsh-history-substring-search
