@@ -1,6 +1,6 @@
 
-ZIM_CONFIG_FILE=~/.config/zsh/.zimrc
-ZIM_HOME=~/.config/zsh/.zim
+ZIM_CONFIG_FILE=$ZDOTDIR/.zimrc
+ZIM_HOME=$ZDOTDIR/.zim
 
 if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
   curl -fsSL --create-dirs -o ${ZIM_HOME}/zimfw.zsh \
@@ -10,8 +10,8 @@ fi
 if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZIM_CONFIG_FILE:-${ZDOTDIR:-${HOME}}/.zimrc} ]]; then
   source ${ZIM_HOME}/zimfw.zsh init
 fi
-# perf optimize
-ZSH_AUTOSUGGEST_MANUAL_REBIND=1
+
+
 
 autoload -Uz compinit bashcompinit
 compinit
