@@ -1,4 +1,4 @@
-# https://github.com/Aloxaf/fzf-tab :: important part
+# https://github.com/Aloxaf/fzf-tab/issues/474 :: important part
 autoload -Uz compinit bashcompinit
 compinit
 bashcompinit

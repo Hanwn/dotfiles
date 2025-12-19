@@ -12,12 +12,6 @@ if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZIM_CONFIG_FILE:-${ZDOTDIR:-${HOME}}/.zimrc} 
 fi
 
 
-
-autoload -Uz compinit bashcompinit
-compinit
-bashcompinit
-
-
 # load plugins
 [[ -d ${ZDOTDIR}/plugins ]] && for f in ${ZDOTDIR}/plugins/*.zsh(.N); source $f
 
