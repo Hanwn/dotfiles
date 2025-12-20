@@ -17,5 +17,26 @@
     "mode": "system",
     "light": "One Dark",
     "dark": "Ayu Dark"
+  },
+  "languages": {
+    "Python": {
+      "language_servers": ["ty"],
+      "format_on_save": "on"
+    }
+  },
+  "lsp": {
+    "ruff": {
+      "initialization_options": {
+        "settings": {
+          "exclude": ["*"]
+        }
+      }
+    },
+    "tinymist": {
+      "settings": {
+        "exportPdf": "onSave",
+        "outputPath": "$root/$name"
+      }
+    }
   }
 }
