@@ -4,5 +4,6 @@ return {
 		opts.options.section_separators = { left = "", right = "" }
 		opts.options.component_separators = { left = "", right = "" }
 		opts.sections.lualine_z = {}
+		opts.options.theme = "everforest"
 	end,
 }
