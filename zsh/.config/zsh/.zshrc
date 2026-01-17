@@ -20,4 +20,12 @@ source ${ZIM_HOME}/init.zsh
 source ${ZDOTDIR}/.zshenv
 source ${ZDOTDIR}/.aliases
 
+# install starship
+if ! command -v starship >/dev/null 2>&1; then
+  if [[ -o interactive ]] && command -v curl >/dev/null 2>&1; then
+    echo "[zsh] starship not found, installing..."
+    curl -fsSL https://starship.rs/install.sh | sh -s -- --yes >/dev/null 2>&1
+  fi
+fi
+
 eval "$(starship init zsh)"
