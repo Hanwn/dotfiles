@@ -2,10 +2,19 @@ gui:
   nerdFontsVersion: "3"
 
 git:
-  pager:
-    - colorArg: always
-      pager: delta -s --dark --paging=never
+  pagers:
+    - pager: delta --dark --paging=never
+
+keybinding:
+  universal:
+    prevBlock-alt: K
+    nextBlock-alt: J
+    nextTab: l
+    prevTab: h
+    prevItem: k
+    nextItem: j
+    scrollUpMain-alt1: <up>
+    scrollDownMain-alt1: <down>
 
 os:
-  editPreset: 'nvim'
-# Edit: nvim
+  editPreset: "nvim"
