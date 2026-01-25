@@ -1,5 +1,5 @@
 
-ZIM_CONFIG_FILE=$ZDOTDIR/.zimrc
+ZIM_CONFIG_FILE=$ZDOTDIR/.zimrc.zsh
 ZIM_HOME=$ZDOTDIR/.zim
 
 if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
@@ -7,7 +7,7 @@ if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
       https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
 fi
 
-if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZIM_CONFIG_FILE:-${ZDOTDIR:-${HOME}}/.zimrc} ]]; then
+if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZIM_CONFIG_FILE:-${ZDOTDIR:-${HOME}}/.zimrc.zsh} ]]; then
   source ${ZIM_HOME}/zimfw.zsh init
 fi
 
@@ -18,7 +18,7 @@ fi
 
 source ${ZIM_HOME}/init.zsh
 source ${ZDOTDIR}/.zshenv
-source ${ZDOTDIR}/.aliases
+source ${ZDOTDIR}/.aliases.zsh
 
 # install starship
 if ! command -v starship >/dev/null 2>&1; then

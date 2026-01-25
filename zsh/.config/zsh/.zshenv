@@ -13,9 +13,12 @@ export EDITOR=nvim
 export VISUAL=nvim
 
 
-# path config
-export PATH="$GOPATH/bin:$HOME/.local/bin:$PATH"
+# software config
+export BUN_INSTALL=${XDG_DATA_HOME}/bun
+export STARSHIP_CONFIG=${XDG_CONFIG_HOME}/starship/starship.toml
 
+# path config
+export PATH="$GOPATH/bin:${XDG_BIN_DIR}:$BUN_INSTALL/bin:$PATH"
 
 # for linux
 if [ -d "$XDG_DATA_HOME/JetBrains/Toolbox/scripts" ]; then
