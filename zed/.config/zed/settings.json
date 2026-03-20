@@ -7,6 +7,52 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
+  "edit_predictions": {
+    "open_ai_compatible_api": {
+      "api_url": "https://ark.cn-beijing.volces.com/api/coding/v3",
+      "model": "ark-code-latest"
+    },
+    "provider": "open_ai_compatible_api"
+  },
+  "agent": {
+    "default_profile": "ask",
+    "default_model": {
+      "provider": "volcengine",
+      "model": "ark-code-latest"
+    },
+    "favorite_models": [],
+    "model_parameters": []
+  },
+  "language_models": {
+    "openai_compatible": {
+      "volcengine": {
+        "api_url": "https://ark.cn-beijing.volces.com/api/coding/v3",
+        "available_models": [
+          {
+            "name": "ark-code-latest",
+            "max_tokens": 200000,
+            "max_output_tokens": 32000,
+            "max_completion_tokens": 200000,
+            "capabilities": {
+              "tools": true,
+              "images": false,
+              "parallel_tool_calls": false,
+              "prompt_cache_key": false,
+              "chat_completions": true
+            }
+          }
+        ]
+      }
+    }
+  },
+  "agent_servers": {},
+  "text_rendering_mode": "platform_default",
+  "buffer_font_family": ".ZedMono",
+  "autosave": "on_focus_change",
+  "vim": {
+    "toggle_relative_line_numbers": true,
+  },
+  "use_system_path_prompts": true,
   "ui_font_family": "Arial",
   "icon_theme": "Zed (Default)",
   "vim_mode": true,
@@ -15,28 +61,28 @@
   "buffer_font_size": 15,
   "theme": {
     "mode": "system",
-    "light": "One Dark",
-    "dark": "Ayu Dark"
+    "light": "Ayu Mirage",
+    "dark": "Ayu Dark",
   },
   "languages": {
     "Python": {
       "language_servers": ["ty"],
-      "format_on_save": "on"
-    }
+      "format_on_save": "on",
+    },
   },
   "lsp": {
     "ruff": {
       "initialization_options": {
         "settings": {
-          "exclude": ["*"]
-        }
-      }
+          "exclude": ["*"],
+        },
+      },
     },
     "tinymist": {
       "settings": {
         "exportPdf": "onSave",
-        "outputPath": "$root/$name"
-      }
-    }
-  }
+        "outputPath": "$root/$name",
+      },
+    },
+  },
 }
