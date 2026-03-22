@@ -4,7 +4,7 @@ export XDG_STATE_HOME=${XDG_STATE_HOME:-$HOME/.local/state}
 export XDG_DATA_HOME=${XDG_DATA_HOME:-$HOME/.local/share}
 export XDG_BIN_DIR=${XDG_BIN_DIR:-$HOME/.local/bin}
 
-
+export TERM=xterm-256color
 export LANGUAGE=en_US
 
 # go settings
