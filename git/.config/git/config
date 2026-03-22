@@ -4,6 +4,7 @@
 
 [delta]
   navigate = true
+  side-by-side = true
 
 [interactive]
   diffFilter = delta --color-only
