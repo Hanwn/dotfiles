@@ -29,3 +29,4 @@ if ! command -v starship >/dev/null 2>&1; then
 fi
 
 eval "$(starship init zsh)"
+eval "$(zoxide init zsh)"

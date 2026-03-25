@@ -5,5 +5,4 @@ zmodule zsh-users/zsh-syntax-highlighting
 zmodule zsh-users/zsh-history-substring-search
 zmodule zsh-users/zsh-autosuggestions
 
-zmodule https://github.com/agkozak/zsh-z
 zmodule Aloxaf/fzf-tab
