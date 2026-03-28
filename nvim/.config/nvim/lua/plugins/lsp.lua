@@ -51,6 +51,9 @@ return {
         
         -- YAML
         yamlls = {},
+        
+        -- Protobuf
+        buf = {},
       },
     },
   },
