@@ -20,6 +20,14 @@ source ${ZIM_HOME}/init.zsh
 source ${ZDOTDIR}/.zshenv
 source ${ZDOTDIR}/.aliases.zsh
 
+# Homebrew - cross-platform setup (Linux: /home/linuxbrew/.linuxbrew, macOS: /opt/homebrew)
+# Must be early to ensure Homebrew paths are set for other tools
+if [[ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
+elif [[ -f "/opt/homebrew/bin/brew" ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv zsh)"
+fi
+
 # install starship
 if ! command -v starship >/dev/null 2>&1; then
   if [[ -o interactive ]] && command -v curl >/dev/null 2>&1; then
@@ -30,9 +38,3 @@ fi
 
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
-# Homebrew - cross-platform setup (Linux: /home/linuxbrew/.linuxbrew, macOS: /opt/homebrew)
-if [[ -f "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
-  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
-elif [[ -f "/opt/homebrew/bin/brew" ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv zsh)"
-fi
