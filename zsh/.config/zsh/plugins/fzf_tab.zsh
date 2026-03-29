@@ -1,7 +1,8 @@
 # https://github.com/Aloxaf/fzf-tab/issues/474 :: important part
-autoload -Uz compinit bashcompinit
+fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
+autoload -Uz compinit
 compinit
-bashcompinit
+#bashcompinit
 
 # disable sort when completing `git checkout`
 zstyle ':completion:*:git-checkout:*' sort false
@@ -21,7 +22,7 @@ zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls -l --color=always $realpath'
 zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept
 # To make fzf-tab follow FZF_DEFAULT_OPTS.
 # NOTE: This may lead to unexpected behavior since some flags break this plugin. See Aloxaf/fzf-tab#455.
-zstyle ':fzf-tab:*' use-fzf-default-opts yes
+zstyle ':fzf-tab:*' use-fzf-default-opts on
 # switch group using `<` and `>`
 zstyle ':fzf-tab:*' switch-group '<' '>'
 zstyle ':fzf-tab:*' default-color $'\033[94m'
