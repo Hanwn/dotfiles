@@ -1,5 +1,4 @@
 # https://github.com/Aloxaf/fzf-tab/issues/474 :: important part
-fpath=($(brew --prefix)/share/zsh/site-functions $fpath)
 autoload -Uz compinit
 compinit
 #bashcompinit
