@@ -63,11 +63,11 @@ symbol = " "
 tag_symbol = '  '
 
 [git_state]
-disabled = true
 format = '[\($state( $progress_current of $progress_total)\)]($style) '
 cherry_pick = '[🍒 PICKING](bold red)'
 
 [git_status]
+disabled = true
 staged = '[++\($count\)](green)'
 ahead = '⇡${count}'
 diverged = '⇡${ahead_count}⇣${behind_count}'
