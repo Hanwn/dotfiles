@@ -21,5 +21,5 @@ source ${ZDOTDIR}/.aliases.zsh
 
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
-eval "$(mise activate zsh)"
 eval "$(sheldon source)"
+eval "$(mise activate zsh)"
