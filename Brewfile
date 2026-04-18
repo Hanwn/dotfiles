@@ -21,6 +21,9 @@ brew "fzf"
 brew "git"
 brew "lazygit"
 brew "typst"
+brew "atuin"
+brew "mise"
+brew "sheldon"
 
 # Applications
 cask "visual-studio-code"
