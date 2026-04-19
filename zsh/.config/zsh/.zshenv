@@ -17,6 +17,9 @@ export GOPROXY="https://goproxy.cn,direct"
 export EDITOR=nvim
 export VISUAL=nvim
 
+# atuin settings
+export ATUIN_NOBIND="true"
+
 
 # software config
 export BUN_INSTALL=${XDG_DATA_HOME}/bun

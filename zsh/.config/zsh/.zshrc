@@ -10,6 +10,12 @@ if command -v brew >/dev/null; then
   fpath=("$(brew --prefix)/share/zsh/site-functions" $fpath)
 fi
 
+# zerobrew completions
+if [[ -d "/opt/zerobrew/share/zsh/site-functions" ]]; then
+  fpath=("/opt/zerobrew/share/zsh/site-functions" $fpath)
+fi
+
+
 
 # load plugins
 [[ -d ${ZDOTDIR}/plugins ]] && for f in ${ZDOTDIR}/plugins/*.zsh(.N); source $f
@@ -22,4 +28,5 @@ source ${ZDOTDIR}/.aliases.zsh
 eval "$(starship init zsh)"
 eval "$(zoxide init zsh)"
 eval "$(sheldon source)"
+eval "$(atuin init zsh)"
 eval "$(mise activate zsh)"

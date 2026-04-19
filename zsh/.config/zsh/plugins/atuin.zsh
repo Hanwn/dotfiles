@@ -1,6 +1,3 @@
-export ATUIN_NOBIND="true"
-eval "$(atuin init zsh)"
-
 ZVM_CURSOR_STYLE_ENABLED=false
 
 # fix conflict with fzf

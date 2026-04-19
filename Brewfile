@@ -24,6 +24,35 @@ brew "typst"
 brew "atuin"
 brew "mise"
 brew "sheldon"
+brew "starship"
+brew "fish"
+
+# CLI utilities
+brew "bat"
+brew "eza"
+brew "git-delta"
+brew "htop"
+brew "k9s"
+brew "lazyssh"
+brew "make"
+brew "merve"
+brew "mosh"
+brew "stow"
+brew "tldr"
+brew "tokei"
+brew "uv"
+brew "wget"
+brew "yq"
+brew "zoxide"
+brew "rust"
+brew "node"
+brew "llvm@21"
+
+# zerobrew (zb) managed packages
+brew "curl"
+brew "lua"
+brew "protobuf"
+
 
 # Applications
 cask "visual-studio-code"
