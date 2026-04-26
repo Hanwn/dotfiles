@@ -22,7 +22,7 @@ fi
 
 
 # load plugins
-[[ -d ${ZDOTDIR}/plugins ]] && for f in ${ZDOTDIR}/plugins/*.zsh(.N); source $f
+[[ -d ${ZDOTDIR}/conf.d ]] && for f in ${ZDOTDIR}/conf.d/*.zsh(.N); source $f
 
 
 
