@@ -25,6 +25,8 @@ export ATUIN_NOBIND="true"
 export BUN_INSTALL=${XDG_DATA_HOME}/bun
 export STARSHIP_CONFIG=${XDG_CONFIG_HOME}/starship/starship.toml
 
+export HOMEBREW_NO_ENV_HINTS="1"
+
 # path config
 export PATH="$GOPATH/bin:$BUN_INSTALL/bin:${XDG_BIN_DIR}:$PATH"
 
