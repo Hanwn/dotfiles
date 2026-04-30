@@ -11,7 +11,6 @@ return {
 			css = { "prettier" },
 			scss = { "prettier" },
 			markdown = { "prettier" },
-			yaml = { "prettier" },
 			go = { "gofumpt", "goimports" },
 			lua = { "stylua" },
 			rust = {},
@@ -22,12 +21,12 @@ return {
 			typst = { "prettypst" },
 		},
 		formatters = {
-		  prettier = {
-		    options = {
-		      tab_width = 4,
-		      use_tabs = false,
-		    },
-		  },
+			prettier = {
+				options = {
+					tab_width = 4,
+					use_tabs = false,
+				},
+			},
 			ruff_format = {
 				options = {
 					indent_width = 4,
