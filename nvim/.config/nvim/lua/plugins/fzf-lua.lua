@@ -2,6 +2,7 @@ return {
 	{
 		"ibhagwan/fzf-lua",
 		opts = {
+			rg_glob = true,
 			grep = {
 				rg_opts = "--column --line-number --no-heading --color=always --smart-case --max-columns=4096 --hidden -e",
 			},
