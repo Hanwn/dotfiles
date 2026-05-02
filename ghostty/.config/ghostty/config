@@ -6,7 +6,6 @@ copy-on-select = true
 cursor-style = block
 cursor-style-blink = false
 shell-integration-features = no-cursor
-font-family = SFMono
 
 theme = Raycast Dark
 background = #1a1a1a

@@ -20,7 +20,15 @@ gui:
       - '#cdd6f4'
     searchingActiveBorderColor:
       - '#f9e2af'
-
+      # Customize the color highlights of the branch
+  branchColors:
+    "docs": "#11aaff"
+    "dev*": "#ebad6c"
+    "main": "#af92fc"
+    "master": "#af92fc"
+  showDivergenceFromBaseBranch: onlyArrow
+  filterMode: fuzzy
+disableStartupPopups: true
 git:
   pagers:
     - colorArg: always
