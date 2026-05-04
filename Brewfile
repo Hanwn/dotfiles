@@ -13,7 +13,6 @@
 # Development tools
 brew "tmux"
 brew "neovim"
-brew "zsh"
 brew "yazi"
 brew "fd"
 brew "ripgrep"
@@ -25,40 +24,23 @@ brew "atuin"
 brew "mise"
 brew "sheldon"
 brew "starship"
-brew "fish"
 
 # CLI utilities
 brew "bat"
 brew "eza"
 brew "git-delta"
 brew "htop"
-brew "k9s"
-brew "lazyssh"
 brew "make"
-brew "merve"
 brew "mosh"
-brew "stow"
 brew "tldr"
 brew "tokei"
 brew "uv"
 brew "wget"
 brew "yq"
 brew "zoxide"
-brew "rust"
-brew "node"
-brew "llvm@21"
+brew "rclone"
+brew "task"
 
-# zerobrew (zb) managed packages
 brew "curl"
 brew "lua"
 brew "protobuf"
-
-
-# Applications
-cask "visual-studio-code"
-cask "zed"
-
-# Nerd Fonts
-tap "homebrew/cask-fonts"
-cask "font-sf-mono-nerd-font"
-cask "font-jetbrains-mono-nerd-font"

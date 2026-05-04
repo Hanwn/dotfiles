@@ -27,8 +27,8 @@ fi
 
 
 
-eval "$(starship init zsh)"
-eval "$(zoxide init zsh)"
-eval "$(sheldon source)"
-eval "$(atuin init zsh)"
-eval "$(mise activate zsh)"
+command -v starship &> /dev/null && eval "$(starship init zsh)"
+command -v zoxide &> /dev/null && eval "$(zoxide init zsh)"
+command -v sheldon &> /dev/null && eval "$(sheldon source)"
+command -v atuin &> /dev/null && eval "$(atuin init zsh)"
+command -v mise &> /dev/null && eval "$(mise activate zsh)"
