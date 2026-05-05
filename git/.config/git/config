@@ -1,34 +1,37 @@
 [core]
-  editor = nvim
-  pager = delta
+    editor = nvim
+    pager = delta
 
 [delta]
-  navigate = true
-  side-by-side = true
-  line-numbers = true
+    navigate = true
+    side-by-side = true
+    line-numbers = true
 
 [interactive]
-  diffFilter = delta --color-only
+    diffFilter = delta --color-only
 
 [diff]
-  tool = nvimdiff
+    tool = nvimdiff
 
 [difftool "nvimdiff"]
-  cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
+    cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 
 [merge]
-  tool = nvimdiff
-  conflictStyle = zdiff3
+    tool = nvimdiff
+    conflictStyle = zdiff3
 
 [mergetool]
-  keepBackup = false
-  prompt = false
+    keepBackup = false
+    prompt = false
 
 [mergetool "nvimdiff"]
-  cmd = "nvim -d \"$LOCAL\" \"$MERGED\" \"$REMOTE\" -c 'wincmd = | set diffopt+=vertical'"
+    cmd = "nvim -d \"$LOCAL\" \"$MERGED\" \"$REMOTE\" -c 'wincmd = | set diffopt+=vertical'"
 [core]
-  editor = nvim
-  pager = delta
+    editor = nvim
+    pager = delta
 
 [include]
-  path = ~/.config/git/config.local
+    path = ~/.config/git/config.local
+
+[alias]
+    ll = log --all --graph --pretty=format:'%C(yellow)%h %C(cyan)%ad %C(green)%an %C(reset)%s' --date=short
