@@ -19,13 +19,8 @@ if command -v brew >/dev/null 2>&1; then
 fi
 
 
-
-
-
 # load plugins
 [[ -d ${ZDOTDIR}/conf.d ]] && for f in ${ZDOTDIR}/conf.d/*.zsh(.N); source $f
-
-
 
 command -v starship &> /dev/null && eval "$(starship init zsh)"
 command -v zoxide &> /dev/null && eval "$(zoxide init zsh)"

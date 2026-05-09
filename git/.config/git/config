@@ -34,4 +34,4 @@
     path = ~/.config/git/config.local
 
 [alias]
-    ll = log --all --graph --pretty=format:'%C(yellow)%h %C(cyan)%ad %C(green)%an %C(reset)%s' --date=short
+    ll = log --all --pretty=format:'%C(yellow)%h %C(cyan)%ad %C(green)%an %C(reset)%s' --date=short
