@@ -40,7 +40,7 @@ if [ -d "$HOME/Library/Application Support/JetBrains/Toolbox/scripts" ]; then
   export PATH="$HOME/Library/Application Support/JetBrains/Toolbox/scripts:$PATH"
 fi
 
-local_env_file="${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}/.localenv"
+local_env_file="${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}/.local.env"
 if [ -r "$local_env_file" ]; then
   . "$local_env_file"
 fi
