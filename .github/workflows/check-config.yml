@@ -36,6 +36,13 @@ jobs:
         run: bash install.sh
       - name: Verify
         run: |
+          # load brew environment
+          for brew_path in /home/linuxbrew/.linuxbrew/bin/brew /opt/homebrew/bin/brew /usr/local/bin/brew "$HOME/.linuxbrew/bin/brew"; do
+            if [ -x "$brew_path" ]; then
+              eval "$("$brew_path" shellenv)"
+              break
+            fi
+          done
           for t in zsh git tmux nvim starship fzf rg fd bat eza zoxide stow; do
             command -v $t &>/dev/null && echo "✓ $t" || echo "✗ $t"
           done
@@ -55,6 +62,13 @@ jobs:
         run: bash install.sh
       - name: Verify
         run: |
+          # load brew environment
+          for brew_path in /home/linuxbrew/.linuxbrew/bin/brew /opt/homebrew/bin/brew /usr/local/bin/brew "$HOME/.linuxbrew/bin/brew"; do
+            if [ -x "$brew_path" ]; then
+              eval "$("$brew_path" shellenv)"
+              break
+            fi
+          done
           for t in zsh git tmux nvim starship fzf rg fd bat eza zoxide stow; do
             command -v $t &>/dev/null && echo "✓ $t" || echo "✗ $t"
           done
