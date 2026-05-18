@@ -1,0 +1,32 @@
+## 搜索行为
+# 默认搜索模式：prefix | fulltext | fuzzy | skim
+search_mode = "fuzzy"
+# 搜索过滤：global（所有机器）| host | session | directory
+filter_mode = "host"
+# 上箭头过滤模式（优先显示当前目录历史）
+filter_mode_shell_up_key_binding = "directory"
+
+## UI
+style = "compact"
+inline_height = 30
+show_preview = true
+show_help = false
+
+## 历史
+max_history_length = 100000
+history_filter = [
+    "^cd",
+    "^ls",
+    "^exit",
+    "^clear",
+    "^bg",
+    "^fg",
+]
+
+## 同步
+auto_sync = false
+sync_frequency = "0"
+
+## 其他
+workspaces = true
+exit_mode = "return-original"

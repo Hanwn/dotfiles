@@ -1,3 +1,10 @@
+[settings]
+pin = true
+status.show_tools = true
+status.show_env = true
+node.corepack = true
+
+
 [tools]
 go = "1.25.0"
 node = "25"

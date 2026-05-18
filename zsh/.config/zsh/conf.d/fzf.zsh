@@ -48,13 +48,13 @@ export FZF_ALT_C_OPTS="
 "
 
 # CTRL-R: 历史搜索增强
-export FZF_CTRL_R_OPTS="
-  --preview 'echo {}'
-  --preview-window 'up:3:hidden:wrap'
-  --bind 'ctrl-/:toggle-preview'
-  --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
-  --header 'CTRL-Y: copy to clipboard'
-"
+# export FZF_CTRL_R_OPTS="
+#   --preview 'echo {}'
+#   --preview-window 'up:3:hidden:wrap'
+#   --bind 'ctrl-/:toggle-preview'
+#   --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
+#   --header 'CTRL-Y: copy to clipboard'
+# "
 
 # Advanced customization of fzf options via _fzf_comprun function
 _fzf_comprun() {

@@ -1,0 +1,23 @@
+sort_by = "natural"
+sort_dir_first = true
+sort_reverse = false
+show_hidden = true
+show_symlink = true
+linemode = "size"
+
+[preview]
+image_quality = 75
+max_width = 600
+max_height = 900
+image_filter = "triangle"
+
+[opener]
+edit = [
+    { run = '$EDITOR "$@"', block = true, for = "unix" },
+]
+open = [
+    { run = 'open "$@"', for = "macos" },
+]
+reveal = [
+    { run = 'open -R "$@"', for = "macos" },
+]

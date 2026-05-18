@@ -1,17 +1,36 @@
 [core]
     editor = nvim
     pager = delta
+	quotepath = false
 
-[delta]
-    navigate = true
-    side-by-side = true
-    line-numbers = true
+[init]
+    defaultBranch = main
 
-[interactive]
-    diffFilter = delta --color-only
+[push]
+    autoSetupRemote = true
+
+[pull]
+    rebase = true
+
+[fetch]
+    prune = true
+
+[rebase]
+    autoStash = true
+
+[rerere]
+    enabled = true
+
+[branch]
+    sort = -committerdate
+
+[tag]
+    sort = -version:refname
 
 [diff]
     tool = nvimdiff
+    algorithm = histogram
+    colorMoved = default
 
 [difftool "nvimdiff"]
     cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
@@ -26,12 +45,19 @@
 
 [mergetool "nvimdiff"]
     cmd = "nvim -d \"$LOCAL\" \"$MERGED\" \"$REMOTE\" -c 'wincmd = | set diffopt+=vertical'"
-[core]
-    editor = nvim
-    pager = delta
+
+[delta]
+    navigate = true
+    side-by-side = true
+    line-numbers = true
+
+[interactive]
+    diffFilter = delta --color-only
 
 [include]
     path = ~/.config/git/config.local
 
 [alias]
-    ll = log --all --pretty=format:'%C(yellow)%h %C(cyan)%ad %C(green)%an %C(reset)%s' --date=short
+    la = log --all --pretty=format:'%C(yellow)%h %C(cyan)%ad %C(green)%an %C(reset)%s' --date=short
+    lg = log --oneline --graph --decorate --all
+
