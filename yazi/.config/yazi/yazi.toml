@@ -1,14 +1,13 @@
-sort_by = "natural"
-sort_dir_first = true
-sort_reverse = false
-show_hidden = true
-show_symlink = true
+sort-by = "natural"
+sort-dir-first = true
+sort-reverse = false
+show-symlink = true
 linemode = "size"
 
 [preview]
-image_quality = 75
-max_width = 600
-max_height = 900
+image-quality = 75
+max-width = 600
+max-height = 900
 image_filter = "triangle"
 
 [opener]
