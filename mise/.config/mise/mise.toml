@@ -1,7 +1,7 @@
 [settings]
 pin = true
-status.show_tools = true
-status.show_env = true
+status.show_tools = false
+status.show_env = false
 node.corepack = true
 
 
