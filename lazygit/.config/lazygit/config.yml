@@ -43,6 +43,7 @@ gui:
 disableStartupPopups: true
 git:
   # 自动 fetch 间隔（秒），0 为禁用
+  parseEmoji: true
   autoFetch: true
   autoRefresh: true
   # commit 时不运行 hooks（按需开启）
@@ -69,7 +70,8 @@ customCommands:
   # 以 fixup 方式提交到选中 commit
   - key: "F"
     context: "commits"
-    command: "git commit --fixup={{.SelectedLocalCommit.Hash}} && git rebase -i --autosquash {{.SelectedLocalCommit.Hash}}~1"
+    command: "git commit --fixup={{.SelectedLocalCommit.Hash}} && git rebase -i
+      --autosquash {{.SelectedLocalCommit.Hash}}~1"
     description: "Fixup into this commit"
     loadingText: "Fixing up..."
   # 复制 commit hash

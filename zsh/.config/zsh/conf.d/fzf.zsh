@@ -6,7 +6,7 @@ fi
 # Use ~~ as the trigger sequence instead of the default **
 export FZF_COMPLETION_TRIGGER='**'
 
-# Tokyo Night 配色 + 全局外观/交互
+# Raycast Dark 配色 + 全局外观/交互
 export FZF_DEFAULT_OPTS="
   --height=60%
   --layout=reverse
@@ -20,10 +20,10 @@ export FZF_DEFAULT_OPTS="
   --bind='ctrl-u:preview-half-page-up'
   --bind='ctrl-d:preview-half-page-down'
   --bind='ctrl-/:toggle-preview'
-  --color=fg:#c0caf5,bg:#1a1b26,hl:#ff9e64
-  --color=fg+:#c0caf5,bg+:#292e42,hl+:#ff9e64
-  --color=info:#7aa2f7,prompt:#7dcfff,pointer:#bb9af7
-  --color=marker:#9ece6a,spinner:#9ece6a,header:#7aa2f7
+  --color=fg:#ffffff,bg:#1a1a1a,hl:#56c2ff
+  --color=fg+:#ffffff,bg+:#333333,hl+:#56c2ff
+  --color=info:#56c2ff,prompt:#56c2ff,pointer:#ff5360
+  --color=marker:#59d499,spinner:#ffc531,header:#56c2ff
 "
 
 # Options for completion
