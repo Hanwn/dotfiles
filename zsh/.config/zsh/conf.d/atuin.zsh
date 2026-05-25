@@ -1,5 +1,7 @@
 ZVM_CURSOR_STYLE_ENABLED=false
 
+export ATUIN_NOBIND="true"
+
 # fix conflict with fzf
 function zvm_after_init() {
   # zvm_bindkey viins '^R' fzf-history-widget
