@@ -92,24 +92,24 @@ link_dotfiles() {
 create_local_configs() {
   info "Creating local config templates if missing..."
 
-  local -A templates=(
-    ["$HOME/.config/git/config.local"]='[user]
-    name = Your Name
-    email = your.email@example.com'
-    ["$HOME/.config/zsh/.local.env"]='# Local environment variables (not tracked by git)
-# source "${XDG_DATA_HOME}/clashctl/scripts/cmd/clashctl.sh"
-# export TP_API_KEY="your-api-key"'
-  )
-
-  for path in "${!templates[@]}"; do
+  _ensure_template() {
+    local path="$1" content="$2"
     if [[ ! -f "$path" ]]; then
       mkdir -p "$(dirname "$path")"
-      printf '%s\n' "${templates[$path]}" > "$path"
+      printf '%s\n' "$content" > "$path"
       ok "Created: $path"
     else
       ok "Exists:  $path"
     fi
-  done
+  }
+
+  _ensure_template "$HOME/.config/git/config.local" '[user]
+    name = Your Name
+    email = your.email@example.com'
+
+  _ensure_template "$HOME/.config/zsh/.local.env" '# Local environment variables (not tracked by git)
+# source "${XDG_DATA_HOME}/clashctl/scripts/cmd/clashctl.sh"
+# export TP_API_KEY="your-api-key"'
 }
 
 # ── main ────────────────────────────────────────────────────────────
