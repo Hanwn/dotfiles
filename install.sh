@@ -55,7 +55,7 @@ install_brew() {
 # ── brew bundle ──────────────────────────────────────────────────────
 run_brew_bundle() {
   info "Running brew bundle..."
-  brew bundle --file="$DOTFILES_DIR/Brewfile" --no-lock
+  brew bundle --file="$DOTFILES_DIR/Brewfile"
   ok "brew bundle done"
 }
 
