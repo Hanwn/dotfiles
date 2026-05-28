@@ -73,7 +73,7 @@ link_dotfiles() {
 
         # --restow: idempotent (unstow then stow)
         # --no-folding: symlink individual files, never entire directories
-        if stow --restow --no-folding --stow --target="$HOME" "$pkg" 2>&1; then
+        if stow --restow --no-folding --stow --adopt --target="$HOME" "$pkg" 2>&1; then
             ok "Linked: $pkg"
         else
             warn "Failed to link: $pkg"
