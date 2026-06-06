@@ -20,6 +20,7 @@ export FZF_DEFAULT_OPTS="
   --bind='ctrl-u:preview-half-page-up'
   --bind='ctrl-d:preview-half-page-down'
   --bind='ctrl-/:toggle-preview'
+  --bind='ctrl-r:reload(atuin search $atuin_opts)'
   --color=fg:#ffffff,bg:#1a1a1a,hl:#56c2ff
   --color=fg+:#ffffff,bg+:#333333,hl+:#56c2ff
   --color=info:#56c2ff,prompt:#56c2ff,pointer:#ff5360
