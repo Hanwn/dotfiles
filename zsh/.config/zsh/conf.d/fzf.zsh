@@ -20,7 +20,6 @@ export FZF_DEFAULT_OPTS="
   --bind='ctrl-u:preview-half-page-up'
   --bind='ctrl-d:preview-half-page-down'
   --bind='ctrl-/:toggle-preview'
-  --bind='ctrl-r:reload(atuin search $atuin_opts)'
   --color=fg:#ffffff,bg:#1a1a1a,hl:#56c2ff
   --color=fg+:#ffffff,bg+:#333333,hl+:#56c2ff
   --color=info:#56c2ff,prompt:#56c2ff,pointer:#ff5360
@@ -69,3 +68,56 @@ _fzf_comprun() {
     *)            fzf --preview 'bat -n --color=always {}' "$@" ;;
   esac
 }
+
+
+
+#### CTRL-R: 用 atuin 的数据给 fzf 做模糊查询
+# 坑点：
+#   1. 上面 `source <(fzf --zsh)` 已经把 ^R 绑到 fzf-history-widget（读 zsh 自己的历史）
+#   2. zsh-vi-mode (zvm) 通过 sheldon 加载，会延迟到第一个 precmd 才 zvm_init，
+#      初始化时 **会清空所有自定义 keymap**，普通的 bindkey 会被它吹掉，
+#      表现为按 ^R 时回退到 zsh 内置的 `bck-i-search:` 提示。
+#   3. atuin init 在 ATUIN_NOBIND=true 下不绑键，只注册 widget。
+# 解决：定义自己的 widget，并把 bindkey 注册同时挂到 zvm_after_init_commands 钩子，
+# 既覆盖 fzf 的默认绑定，又能在 zvm 清空 keymap 后再绑回来。
+if command -v atuin >/dev/null 2>&1; then
+  _atuin_fzf_history() {
+    emulate -L zsh
+    local selected
+    # atuin history list --cmd-only --reverse 是新→旧；fzf --no-sort 保持该顺序
+    # awk 去重保留首次出现（即最近一次执行）
+    selected=$(
+      atuin history list --cmd-only --reverse \
+        | awk '!seen[$0]++' \
+        | fzf \
+            --no-sort \
+            --exact \
+            --tiebreak=index \
+            --scheme=history \
+            --query="$LBUFFER" \
+            --prompt='atuin> ' \
+            --bind='ctrl-y:accept'
+    )
+    local ret=$?
+    if [[ -n $selected ]]; then
+      LBUFFER=$selected
+      RBUFFER=''
+    fi
+    zle reset-prompt
+    return $ret
+  }
+  zle -N _atuin_fzf_history
+
+  _atuin_fzf_bind() {
+    bindkey '^R' _atuin_fzf_history
+    bindkey -M viins '^R' _atuin_fzf_history 2>/dev/null
+    bindkey -M vicmd '^R' _atuin_fzf_history 2>/dev/null
+    bindkey -M emacs '^R' _atuin_fzf_history 2>/dev/null
+  }
+
+  # 立即绑一次（zvm 不存在时这就够了），并挂到 zvm 钩子兜底（zvm init 会清 keymap）
+  typeset -ga zvm_after_init_commands
+  zvm_after_init_commands+=(_atuin_fzf_bind)
+  _atuin_fzf_bind
+fi
+
