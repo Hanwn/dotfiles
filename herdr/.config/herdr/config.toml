@@ -1,0 +1,27 @@
+onboarding = false
+
+[theme]
+name = "tokyo-night"
+
+[ui]
+agent_panel_scope = "all"
+sidebar_width = 32
+sidebar_max_width = 48
+mouse_capture = true
+mouse_scroll_lines = 1
+confirm_close = true
+
+[ui.sound]
+enabled = true
+
+[ui.toast]
+delivery = "herdr"
+
+[terminal]
+default_shell = "zsh"
+
+[session]
+resume_agents_on_restore = true
+
+[experimental]
+pane_history = true
