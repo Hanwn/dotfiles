@@ -1,7 +1,7 @@
 onboarding = false
 
 [theme]
-name = "tokyo-night"
+name = "terminal"
 
 [ui]
 agent_panel_scope = "all"
@@ -25,3 +25,8 @@ resume_agents_on_restore = true
 
 [experimental]
 pane_history = true
+
+
+[keys]
+copy_mode = "prefix+v"
+split_vertical = "prefix+|"
