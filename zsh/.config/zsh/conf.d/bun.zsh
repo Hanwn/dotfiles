@@ -1,2 +1,0 @@
-export BUN_INSTALL=${XDG_DATA_HOME}/bun
-export PATH="$GOPATH/bin:$BUN_INSTALL/bin:${XDG_BIN_DIR}:$PATH"

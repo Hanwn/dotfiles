@@ -1,6 +1,11 @@
 #### fzf
 if command -v fzf >/dev/null 2>&1; then
-    source <(fzf --zsh)
+    local fzf_cache="${XDG_CACHE_HOME}/zsh/fzf-init.zsh"
+    if [[ ! -f "$fzf_cache" || "$(command -v fzf)" -nt "$fzf_cache" ]]; then
+        mkdir -p "${XDG_CACHE_HOME}/zsh"
+        fzf --zsh > "$fzf_cache"
+    fi
+    source "$fzf_cache"
 fi
 
 # Use ~~ as the trigger sequence instead of the default **
@@ -48,16 +53,6 @@ export FZF_ALT_C_OPTS="
   --preview 'eza --tree --color=always --icons --level=2 {} | head -200'
 "
 
-# CTRL-R: 历史搜索增强
-# export FZF_CTRL_R_OPTS="
-#   --preview 'echo {}'
-#   --preview-window 'up:3:hidden:wrap'
-#   --bind 'ctrl-/:toggle-preview'
-#   --bind 'ctrl-y:execute-silent(echo -n {2..} | pbcopy)+abort'
-#   --header 'CTRL-Y: copy to clipboard'
-# "
-
-# Advanced customization of fzf options via _fzf_comprun function
 _fzf_comprun() {
   local command=$1
   shift

@@ -25,6 +25,9 @@ export GPG_TTY="${TTY:-$(tty)}"
 export PATH="${XDG_BIN_DIR}:$PATH"
 export MANPATH="${XDG_DATA_HOME}/man:${MANPATH:-}"
 
+# dedup PATH/MANPATH/FPATH entries
+typeset -U path fpath manpath
+
 # machine-local overrides (gitignored)
 local_env_file="${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}/.local.env"
 if [[ -r "$local_env_file" ]]; then
