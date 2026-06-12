@@ -9,20 +9,15 @@ return {
 			servers = {
 				-- C/C++
 				clangd = {},
-
-				-- Web Development
-				vtsls = {},
-				html = {},
-				cssls = {},
-				jsonls = {},
-
-				-- Docker
-				docker_compose = {},
-				dockerfile = {},
-
+				-- Python
+				ty = {},
 				-- Go
 				gopls = {},
-
+				-- Rust
+				rust_analyzer = {},
+				-- JS/TS/JSON
+				vtsls = {},
+				jsonls = {},
 				-- Lua
 				lua_ls = {
 					settings = {
@@ -33,27 +28,6 @@ return {
 						},
 					},
 				},
-
-				-- CMake
-				neocmakelsp = {},
-
-				-- Rust
-				rust_analyzer = {},
-
-				-- Python (ty includes lsp + linting)
-				ty = {},
-
-				-- TOML
-				taplo = {},
-
-				-- Typst
-				tinymist = {},
-
-				-- YAML
-				yamlls = {},
-
-				-- Protobuf
-				buf = {},
 			},
 		},
 	},

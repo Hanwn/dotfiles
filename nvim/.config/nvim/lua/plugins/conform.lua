@@ -7,34 +7,23 @@ return {
 			javascriptreact = { "prettier" },
 			typescriptreact = { "prettier" },
 			json = { "prettier" },
-			html = { "prettier" },
-			css = { "prettier" },
-			scss = { "prettier" },
-			markdown = { "prettier" },
 			go = { "gofumpt", "goimports" },
 			lua = { "stylua" },
-			rust = {},
+			rust = { "rustfmt" },
 			python = { "ruff_fix", "ruff_format" },
-			sh = { "shfmt" },
-			yaml = { "yamlfmt" },
-			toml = { "taplo" },
-			typst = { "prettypst" },
+			c = { "clang-format" },
+			cpp = { "clang-format" },
 		},
 		formatters = {
 			prettier = {
 				options = {
-					tab_width = 4,
+					tab_width = 2,
 					use_tabs = false,
 				},
 			},
 			ruff_format = {
 				options = {
-					indent_width = 4,
-				},
-			},
-			shfmt = {
-				options = {
-					indent = 2,
+					indent_width = 2,
 				},
 			},
 		},

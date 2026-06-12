@@ -1,8 +1,12 @@
 local opt = vim.opt
 
-opt.tabstop = 4
-opt.shiftwidth = 4
+-- indent
+opt.tabstop = 2
+opt.shiftwidth = 2
 opt.expandtab = true
+opt.smarttab = true -- <Tab>/<BS> 在行首按 shiftwidth 缩进
+opt.breakindent = true -- 换行后保持缩进对齐
+opt.copyindent = true -- 复制已有缩进结构
 
 vim.g.lazyvim_picker = "fzf"
 vim.g.lazyvim_check_order = false
