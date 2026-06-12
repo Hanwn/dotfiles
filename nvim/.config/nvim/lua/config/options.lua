@@ -5,6 +5,7 @@ opt.shiftwidth = 4
 opt.expandtab = true
 
 vim.g.lazyvim_picker = "fzf"
+vim.g.lazyvim_check_order = false
 
 -- 禁用未使用的 language providers，加快启动并消除 checkhealth 警告
 vim.g.loaded_node_provider = 0
