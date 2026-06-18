@@ -26,10 +26,10 @@ export FZF_DEFAULT_OPTS="
   --bind='ctrl-d:preview-half-page-down'
   --bind='ctrl-/:toggle-preview'
   --bind='ctrl-r:reload(atuin search $atuin_opts)'
-  --color=fg:#faf9f5,bg:-1,hl:#6a9bcc
-  --color=fg+:#faf9f5,bg+:-1,hl+:#6a9bcc
-  --color=info:#6a9bcc,prompt:#6a9bcc,pointer:#c25848
-  --color=marker:#788c5d,spinner:#c89b40,header:#6a9bcc
+  --color=fg:#ffffff,bg:-1,hl:#56c2ff
+  --color=fg+:#ffffff,bg+:-1,hl+:#56c2ff
+  --color=info:#56c2ff,prompt:#56c2ff,pointer:#ff5360
+  --color=marker:#59d499,spinner:#ffc531,header:#56c2ff
 "
 
 # Options for completion

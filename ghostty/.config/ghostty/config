@@ -9,26 +9,26 @@ shell-integration-features = no-cursor
 
 font-family = JetBrainsMono Nerd Font
 
-background = #141413
-foreground = #faf9f5
-selection-background = #2d2d2b
-selection-foreground = #faf9f5
-cursor-color = #d97757
-cursor-text = #141413
+theme = Raycast Dark
+background = #1a1a1a
+selection-background = #333333
+selection-foreground = #595959
+cursor-color = #cccccc
+cursor-text = #999999
 cursor-style-blink = false
-palette = 0=#1e1e1c
-palette = 1=#c25848
-palette = 2=#788c5d
-palette = 3=#c89b40
-palette = 4=#6a9bcc
-palette = 5=#a07caa
-palette = 6=#5a9e96
-palette = 7=#b0aea5
-palette = 8=#3a3936
-palette = 9=#d97757
-palette = 10=#8fa873
-palette = 11=#dab36a
-palette = 12=#85b3da
-palette = 13=#b890be
-palette = 14=#70b8ae
-palette = 15=#faf9f5
+palette = 0=#000000
+palette = 1=#ff5360
+palette = 2=#59d499
+palette = 3=#ffc531
+palette = 4=#56c2ff
+palette = 5=#cf2f98
+palette = 6=#52eee5
+palette = 7=#ffffff
+palette = 8=#4c4c4c
+palette = 9=#ff6363
+palette = 10=#59d499
+palette = 11=#ffc531
+palette = 12=#56c2ff
+palette = 13=#cf2f98
+palette = 14=#52eee5
+palette = 15=#ffffff
