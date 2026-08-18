@@ -48,9 +48,9 @@ git:
   autoRefresh: true
   # commit 时不运行 hooks（按需开启）
   # skipHookPrefix: "WIP"
-  pagers:
+  diffRenderers:
     - colorArg: always
-      pager: delta --paging=never --syntax-theme="Catppuccin Mocha"
+      command: delta --paging=never --syntax-theme="Catppuccin Mocha"
   # log 显示 graph
   log:
     showGraph: always
@@ -70,8 +70,7 @@ customCommands:
   # 以 fixup 方式提交到选中 commit
   - key: "F"
     context: "commits"
-    command: "git commit --fixup={{.SelectedLocalCommit.Hash}} && git rebase -i
-      --autosquash {{.SelectedLocalCommit.Hash}}~1"
+    command: "git commit --fixup={{.SelectedLocalCommit.Hash}} && git rebase -i --autosquash {{.SelectedLocalCommit.Hash}}~1"
     description: "Fixup into this commit"
     loadingText: "Fixing up..."
   # 复制 commit hash

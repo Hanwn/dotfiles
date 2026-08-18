@@ -46,3 +46,5 @@ brew "rustnet"
 brew "curl"
 brew "lua"
 brew "protobuf"
+
+brew "cc-switch-cli"
