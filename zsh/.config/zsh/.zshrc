@@ -1,9 +1,8 @@
-source ${ZDOTDIR}/.zshenv
-source ${ZDOTDIR}/.aliases.zsh
+source "${ZDOTDIR}/.aliases.zsh"
 
 autoload -Uz compinit
 local zcompdump="${ZDOTDIR}/.zcompdump"
-if [[ -f "$zcompdump" ]] && [[ "$(find "$zcompdump" -mtime -1 2>/dev/null)" ]]; then
+if [[ -f "$zcompdump" ]]; then
   compinit -C -d "$zcompdump"
 else
   compinit -d "$zcompdump"
@@ -19,13 +18,32 @@ elif command -v batcat >/dev/null 2>&1; then
   export MANPAGER="batcat -l man -p"
 fi
 
-# load plugins
-[[ -d ${ZDOTDIR}/conf.d ]] && for f in ${ZDOTDIR}/conf.d/*.zsh(-.N); source $f
+# ZLE-dependent plugins should not initialize in interactive shells without a
+# terminal, such as `zsh -i -c ...`.
+if [[ -o zle ]]; then
+  if command -v sheldon >/dev/null 2>&1; then
+    eval "$(sheldon source)"
+  fi
 
-command -v starship &> /dev/null && eval "$(starship init zsh)"
-command -v zoxide &> /dev/null && eval "$(zoxide init zsh)"
-command -v atuin &> /dev/null && eval "$(atuin init zsh)"
-command -v sheldon &> /dev/null && eval "$(sheldon source)"
+  if [[ -d "${ZDOTDIR}/conf.d" ]]; then
+    for f in "${ZDOTDIR}"/conf.d/*.zsh(N); do
+      [[ -r "$f" ]] || continue
+      source "$f"
+    done
+  fi
+fi
 
-# ctrl-r -> atuin search (must be after atuin init)
-command -v atuin &> /dev/null && bindkey '^r' atuin-search
+if [[ -o zle ]]; then
+  command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
+  command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
+  command -v atuin >/dev/null 2>&1 && eval "$(atuin init zsh)"
+
+  # ctrl-r -> atuin search (must be after atuin init)
+  if (( $+widgets[atuin-search] )); then
+    bindkey '^r' atuin-search
+    (( $+widgets[atuin-search-viins] )) &&
+      bindkey -M viins '^r' atuin-search-viins
+    (( $+widgets[atuin-search-vicmd] )) &&
+      bindkey -M vicmd '^r' atuin-search-vicmd
+  fi
+fi

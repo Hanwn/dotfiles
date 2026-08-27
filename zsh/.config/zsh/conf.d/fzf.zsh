@@ -1,11 +1,12 @@
-#### fzf
-if command -v fzf >/dev/null 2>&1; then
-    local fzf_cache="${XDG_CACHE_HOME}/zsh/fzf-init.zsh"
-    if [[ ! -f "$fzf_cache" || "$(command -v fzf)" -nt "$fzf_cache" ]]; then
-        mkdir -p "${XDG_CACHE_HOME}/zsh"
-        fzf --zsh > "$fzf_cache"
-    fi
-    source "$fzf_cache"
+if (( $+commands[fzf] )); then
+  local fzf_cache_home="${XDG_CACHE_HOME:-$HOME/.cache}"
+  local fzf_cache="$fzf_cache_home/zsh/fzf-init.zsh"
+  if [[ ! -s "$fzf_cache" || "$commands[fzf]" -nt "$fzf_cache" ]]; then
+    mkdir -p "$fzf_cache_home/zsh"
+    fzf --zsh >| "$fzf_cache"
+  fi
+  [[ -s "$fzf_cache" ]] && source "$fzf_cache"
+  unset fzf_cache_home fzf_cache
 fi
 
 # Use ~~ as the trigger sequence instead of the default **
@@ -25,7 +26,6 @@ export FZF_DEFAULT_OPTS="
   --bind='ctrl-u:preview-half-page-up'
   --bind='ctrl-d:preview-half-page-down'
   --bind='ctrl-/:toggle-preview'
-  --bind='ctrl-r:reload(atuin search $atuin_opts)'
   --color=fg:#ffffff,bg:-1,hl:#56c2ff
   --color=fg+:#ffffff,bg+:-1,hl+:#56c2ff
   --color=info:#56c2ff,prompt:#56c2ff,pointer:#ff5360
@@ -54,13 +54,21 @@ export FZF_ALT_C_OPTS="
 "
 
 _fzf_comprun() {
-  local command=$1
+  local command="$1"
   shift
 
   case "$command" in
-    cd)           fzf --preview 'eza --tree --color=always --icons --level=2 {} | head -200' "$@" ;;
-    export|unset) fzf --preview "eval 'echo \$'{}"         "$@" ;;
-    ssh)          fzf --preview 'dig {}'                   "$@" ;;
-    *)            fzf --preview 'bat -n --color=always {}' "$@" ;;
+    cd)
+      fzf --preview 'command -v eza >/dev/null && eza --tree --color=always --icons --level=2 {} | head -200' "$@"
+      ;;
+    export|unset)
+      fzf --preview "eval 'echo \$'{}" "$@"
+      ;;
+    ssh)
+      fzf --preview 'command -v dig >/dev/null && dig {}' "$@"
+      ;;
+    *)
+      fzf --preview 'command -v bat >/dev/null && bat -n --color=always {}' "$@"
+      ;;
   esac
 }

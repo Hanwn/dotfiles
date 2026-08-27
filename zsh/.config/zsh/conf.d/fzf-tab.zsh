@@ -10,7 +10,10 @@ zstyle ':completion:*' menu no
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}' 'r:|=*' 'l:|=*'
 
 # preview directory's content with eza when completing cd
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza --tree --color=always --icons --level=2 $realpath | head -200'
+if (( $+commands[eza] )); then
+  zstyle ':fzf-tab:complete:cd:*' fzf-preview \
+    'eza --tree --color=always --icons --level=2 $realpath | head -200'
+fi
 # custom fzf flags
 zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept --height=~100%
 
@@ -29,8 +32,10 @@ zstyle ':fzf-tab:complete:(-command-|-parameter-|-brace-parameter-|export|unset|
   fzf-preview 'echo ${(P)word}'
 
 # git 补全预览
-zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview \
-  'git diff $word | delta'
+if (( $+commands[delta] )); then
+  zstyle ':fzf-tab:complete:git-(add|diff|restore):*' fzf-preview \
+    'git diff $word | delta'
+fi
 zstyle ':fzf-tab:complete:git-log:*' fzf-preview \
   'git log --oneline --color=always $word'
 zstyle ':fzf-tab:complete:git-checkout:*' fzf-preview \

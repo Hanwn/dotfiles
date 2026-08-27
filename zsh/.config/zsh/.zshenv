@@ -5,9 +5,8 @@ export XDG_STATE_HOME="${XDG_STATE_HOME:-$HOME/.local/state}"
 export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export XDG_BIN_DIR="${XDG_BIN_DIR:-$HOME/.local/bin}"
 
-# locale
-export LANG="en_US.UTF-8"
-export LC_ALL="en_US.UTF-8"
+# Keep the host/container locale when one is already configured.
+export LANG="${LANG:-en_US.UTF-8}"
 
 # editor
 export EDITOR="nvim"
@@ -18,8 +17,10 @@ export PAGER="less"
 export LESS="-R -M --shift 5"
 export LESSHISTFILE="-"
 
-# GPG (for signed git commits in terminal)
-export GPG_TTY="${TTY:-$(tty)}"
+# GPG (for signed git commits in an interactive terminal)
+if [[ -t 1 ]]; then
+  export GPG_TTY="${TTY:-$(tty)}"
+fi
 
 # paths
 export PATH="${XDG_BIN_DIR}:$PATH"

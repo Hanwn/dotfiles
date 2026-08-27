@@ -10,8 +10,31 @@ ok() { printf "\033[1;32m[ OK ]\033[0m %s\n" "$*"; }
 warn() { printf "\033[1;33m[WARN]\033[0m %s\n" "$*" >&2; }
 err() { printf "\033[1;31m[ERR]\033[0m  %s\n" "$*" >&2; }
 
-# Packages to skip when stowing (hidden dirs are always skipped)
+# Packages to skip when stowing. Add a package here only when it should not
+# expose files under $HOME.
 SKIP_PKGS=(local)
+
+# Runtime and machine-local files must stay local to the target machine.
+# Keeping these out of stow also prevents ignored files in the checkout from
+# being linked accidentally.
+STOW_IGNORE_ARGS=(
+  --ignore='(^|/)\.local\.env$'
+  --ignore='(^|/)config\.local$'
+  --ignore='(^|/)\.zcompdump.*$'
+  --ignore='(^|/)\.zhistory$'
+  --ignore='(^|/)\.zcompcache$'
+)
+
+is_skipped_package() {
+  local package="$1"
+  local skipped
+
+  for skipped in "${SKIP_PKGS[@]}"; do
+    [[ "$package" == "$skipped" ]] && return 0
+  done
+  return 1
+}
+
 
 # ── install stow via system package manager ──────────────────────────
 install_stow() {
@@ -21,6 +44,7 @@ install_stow() {
   fi
   info "Installing stow..."
   if [[ "$OSTYPE" == darwin* ]]; then
+    install_brew
     brew install stow
   elif command -v apk &>/dev/null; then
     sudo apk add --no-cache stow
@@ -63,26 +87,35 @@ run_brew_bundle() {
 link_dotfiles() {
   info "Linking dotfiles..."
   local failed=0
+  local package
 
-  for pkg in */; do
-    pkg="${pkg%/}"
+  # Every non-hidden top-level directory is a stow package. This means adding
+  # a new tool only requires creating its package directory.
+  for package in */; do
+    package="${package%/}"
+    [[ "$package" == .* ]] && continue
+    is_skipped_package "$package" && continue
 
-    # skip hidden dirs and explicit skip list
-    [[ "$pkg" == .* ]] && continue
-    printf '%s\n' "${SKIP_PKGS[@]}" | grep -qxF "$pkg" && continue
-
-    # --restow: idempotent (unstow then stow)
-    # --no-folding: symlink individual files, never entire directories
-    if stow --restow --no-folding --stow --adopt --target="$HOME" "$pkg" 2>&1; then
-      ok "Linked: $pkg"
+    # --restow is idempotent. --adopt moves existing target files into this
+    # package before linking them, which is intentional for this personal
+    # configuration repository.
+    if stow \
+      --restow \
+      --no-folding \
+      --adopt \
+      --target="$HOME" \
+      "${STOW_IGNORE_ARGS[@]}" \
+      "$package"; then
+      ok "Linked: $package"
     else
-      warn "Failed to link: $pkg"
-      ((failed++))
+      warn "Failed to link: $package"
+      failed=$((failed + 1))
     fi
   done
 
   if ((failed > 0)); then
-    warn "$failed package(s) had stow conflicts — resolve manually"
+    err "$failed package(s) failed to link — resolve conflicts and rerun"
+    return 1
   else
     ok "All dotfiles linked"
   fi
