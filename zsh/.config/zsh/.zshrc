@@ -37,13 +37,4 @@ if [[ -o zle ]]; then
   command -v starship >/dev/null 2>&1 && eval "$(starship init zsh)"
   command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
   command -v atuin >/dev/null 2>&1 && eval "$(atuin init zsh)"
-
-  # ctrl-r -> atuin search (must be after atuin init)
-  if (( $+widgets[atuin-search] )); then
-    bindkey '^r' atuin-search
-    (( $+widgets[atuin-search-viins] )) &&
-      bindkey -M viins '^r' atuin-search-viins
-    (( $+widgets[atuin-search-vicmd] )) &&
-      bindkey -M vicmd '^r' atuin-search-vicmd
-  fi
 fi
