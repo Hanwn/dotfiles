@@ -1,13 +1,23 @@
 local opt = vim.opt
 
+-- general
+opt.swapfile = false
+
 -- indent
 opt.tabstop = 2
 opt.shiftwidth = 2
 opt.expandtab = true
-opt.smarttab = true -- <Tab>/<BS> 在行首按 shiftwidth 缩进
-opt.breakindent = true -- 换行后保持缩进对齐
-opt.copyindent = true -- 复制已有缩进结构
+opt.smarttab = true
+opt.breakindent = true
+opt.smartindent = true
+opt.copyindent = true
 
+-- ui
+opt.winblend = 0
+
+-----
+
+vim.g.autoformat = false
 vim.g.lazyvim_picker = "fzf"
 vim.g.lazyvim_check_order = false
 
