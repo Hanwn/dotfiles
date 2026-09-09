@@ -47,4 +47,6 @@ brew "curl"
 brew "lua"
 brew "protobuf"
 
+# ai tools
 brew "cc-switch-cli"
+brew "rtk"
