@@ -8,3 +8,4 @@ node.corepack = true
 [tools]
 go = "1.25.0"
 node = "25"
+pnpm = "12.3.4"

@@ -3,50 +3,22 @@ gui:
   nerdFontsVersion: "3"
   showDivergenceFromBaseBranch: onlyArrow
   filterMode: fuzzy
-  # 显示文件图标
   showFileIcons: true
-  # 侧面板宽度比例
   sidePanelWidth: 0.3
-  # 显示底部行（快捷键提示）
   showBottomLine: false
-  # 显示命令日志
   showCommandLog: false
-  # commit 长度警告
   commitLength:
     show: true
-  # 分支颜色
   branchColors:
     "docs": "#11aaff"
     "dev*": "#ebad6c"
     "main": "#af92fc"
     "master": "#af92fc"
-  theme:
-    activeBorderColor:
-      - '#89b4fa'
-      - bold
-    inactiveBorderColor:
-      - '#a6adc8'
-    optionsTextColor:
-      - '#89b4fa'
-    selectedLineBgColor:
-      - '#313244'
-    cherryPickedCommitBgColor:
-      - '#45475a'
-    cherryPickedCommitFgColor:
-      - '#89b4fa'
-    unstagedChangesColor:
-      - '#f38ba8'
-    defaultFgColor:
-      - '#cdd6f4'
-    searchingActiveBorderColor:
-      - '#f9e2af'
 disableStartupPopups: true
 git:
-  # 自动 fetch 间隔（秒），0 为禁用
   parseEmoji: true
   autoFetch: true
   autoRefresh: true
-  # commit 时不运行 hooks（按需开启）
   # skipHookPrefix: "WIP"
   diffRenderers:
     - colorArg: always
@@ -57,36 +29,15 @@ git:
     showWholeGraph: false
 os:
   editPreset: "nvim"
-# 确认提示
 promptToReturnFromSubprocess: false
-# 自定义命令
 customCommands:
-  # 交互式 rebase 到选中 commit
   - key: "R"
     context: "commits"
     command: "git rebase -i {{.SelectedLocalCommit.Hash}}"
     description: "Interactive rebase from here"
     output: terminal
-  # 以 fixup 方式提交到选中 commit
   - key: "F"
     context: "commits"
     command: "git commit --fixup={{.SelectedLocalCommit.Hash}} && git rebase -i --autosquash {{.SelectedLocalCommit.Hash}}~1"
     description: "Fixup into this commit"
     loadingText: "Fixing up..."
-  # 复制 commit hash
-  - key: "Y"
-    context: "commits"
-    command: "printf '%s' {{.SelectedLocalCommit.Hash}} | pbcopy"
-    description: "Copy commit hash to clipboard"
-  # 打开 GitHub PR（当前分支）
-  - key: "O"
-    context: "localBranches"
-    command: "gh pr view --web || gh pr create --web"
-    description: "Open PR in browser"
-    loadingText: "Opening..."
-  # push --force-with-lease（更安全的 force push）
-  - key: "P"
-    context: "localBranches"
-    command: "git push --force-with-lease"
-    description: "Force push (with lease)"
-    loadingText: "Force pushing..."

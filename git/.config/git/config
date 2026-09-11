@@ -1,6 +1,6 @@
 [core]
     editor = nvim
-    pager = delta
+	pager = hunk pager
 	quotepath = false
 
 [init]
@@ -28,7 +28,7 @@
     sort = -version:refname
 
 [diff]
-    tool = nvimdiff
+	tool = hunk
     algorithm = histogram
     colorMoved = default
 
