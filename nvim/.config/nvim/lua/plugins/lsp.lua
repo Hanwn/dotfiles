@@ -1,10 +1,6 @@
 return {
 	{
 		"neovim/nvim-lspconfig",
-		dependencies = {
-			"mason-org/mason.nvim",
-			"mason-org/mason-lspconfig.nvim",
-		},
 		opts = {
 			servers = {
 				-- C/C++
@@ -17,6 +13,7 @@ return {
 				rust_analyzer = {},
 				-- JS/TS/JSON
 				vtsls = {},
+				oxlint = {},
 				jsonls = {},
 				-- Lua
 				lua_ls = {

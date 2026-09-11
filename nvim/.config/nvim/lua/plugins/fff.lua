@@ -6,12 +6,7 @@ return {
 	end,
 	-- for nixos:
 	-- build = "nix run .#release",
-	opts = {
-		debug = {
-			enabled = true,
-			show_scores = true,
-		},
-	},
+	opts = {},
 	lazy = false, -- the plugin lazy-initialises itself
 	keys = {
 		{

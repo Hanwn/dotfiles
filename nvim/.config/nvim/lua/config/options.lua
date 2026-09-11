@@ -2,6 +2,7 @@ local opt = vim.opt
 
 -- general
 opt.swapfile = false
+opt.autoread = true
 
 -- indent
 opt.tabstop = 2

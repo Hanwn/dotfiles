@@ -10,6 +10,8 @@ return {
 				"rust-analyzer",
 				"json-lsp",
 				"lua-language-server",
+				"vtsls",
+				-- lint
 				"oxlint",
 				-- Formatter
 				"stylua",

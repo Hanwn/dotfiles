@@ -21,10 +21,19 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+-- Keep LazyVim's mutable extras/news state out of the dotfiles repository.
+vim.g.lazyvim_json = vim.fn.stdpath("state") .. "/lazyvim.json"
+vim.g.lazyvim_explorer = "snacks"
+
 -- Setup lazy.nvim
 require("lazy").setup({
 	spec = {
 		{ "LazyVim/LazyVim", import = "lazyvim.plugins", version = "*" },
+		{ import = "lazyvim.plugins.extras.lang.typescript" },
+		{ import = "lazyvim.plugins.extras.lang.typescript.oxc" },
+		{ import = "lazyvim.plugins.extras.lang.typst" },
+		{ import = "lazyvim.plugins.extras.editor.illuminate" },
+		{ import = "lazyvim.plugins.extras.editor.outline" },
 		-- import your plugins
 		{ import = "plugins" },
 	},
