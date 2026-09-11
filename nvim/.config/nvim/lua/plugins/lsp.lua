@@ -14,6 +14,7 @@ return {
 				-- JS/TS/JSON
 				vtsls = {},
 				oxlint = {},
+				oxfmt = { enable = false },
 				jsonls = {},
 				-- Lua
 				lua_ls = {
