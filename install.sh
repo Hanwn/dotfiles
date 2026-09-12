@@ -4,6 +4,9 @@ set -euo pipefail
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$DOTFILES_DIR"
 
+STOW_STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles"
+STOW_MANIFEST="$STOW_STATE_DIR/stow-links.tsv"
+
 # ── output helpers ──────────────────────────────────────────────────
 info() { printf "\033[1;34m[INFO]\033[0m %s\n" "$*"; }
 ok() { printf "\033[1;32m[ OK ]\033[0m %s\n" "$*"; }
@@ -33,6 +36,141 @@ is_skipped_package() {
     [[ "$package" == "$skipped" ]] && return 0
   done
   return 1
+}
+
+is_ignored_stow_path() {
+  local path="$1"
+
+  [[ "$path" =~ (^|/)\.local\.env$ ]] ||
+    [[ "$path" =~ (^|/)config\.local$ ]] ||
+    [[ "$path" =~ (^|/)\.zcompdump.*$ ]] ||
+    [[ "$path" =~ (^|/)\.zhistory$ ]] ||
+    [[ "$path" =~ (^|/)\.zcompcache$ ]]
+}
+
+is_safe_relative_path() {
+  local path="$1"
+
+  [[ -n "$path" && "$path" != /* && "$path" != ".." && "$path" != ../* && "$path" != */../* && "$path" != */.. ]]
+}
+
+normalize_path() {
+  local path="$1"
+  local part normalized=""
+  local last
+  local -a parts=() stack=()
+
+  IFS='/' read -r -a parts <<<"$path"
+  for part in "${parts[@]}"; do
+    case "$part" in
+      '' | '.') ;;
+      '..')
+        if ((${#stack[@]} > 0)); then
+          last=$((${#stack[@]} - 1))
+          unset "stack[$last]"
+        fi
+        ;;
+      *) stack+=("$part") ;;
+    esac
+  done
+
+  for part in "${stack[@]}"; do
+    normalized="$normalized/$part"
+  done
+  printf '%s\n' "${normalized:-/}"
+}
+
+cleanup_manifest_links() {
+  local source_rel target_rel recorded_link
+  local source target current_link
+
+  while IFS=$'\t' read -r source_rel target_rel recorded_link; do
+    if ! is_safe_relative_path "$source_rel" || ! is_safe_relative_path "$target_rel"; then
+      warn "Skipping unsafe stow manifest entry: $target_rel"
+      continue
+    fi
+
+    source="$DOTFILES_DIR/$source_rel"
+    target="$HOME/$target_rel"
+    [[ -e "$source" || -L "$source" ]] && continue
+    [[ -L "$target" ]] || continue
+
+    current_link="$(readlink "$target")"
+    if [[ "$current_link" == "$recorded_link" ]]; then
+      unlink "$target"
+      ok "Removed stale link: $target"
+    else
+      warn "Preserving changed link: $target"
+    fi
+  done <"$STOW_MANIFEST"
+}
+
+cleanup_legacy_links() {
+  local package entry root existing
+  local link link_value candidate resolved
+  local -a roots=()
+
+  # The first run has no manifest. Limit the compatibility scan to top-level
+  # targets exposed by the current packages instead of walking all of $HOME.
+  for package in "$@"; do
+    while IFS= read -r -d '' entry; do
+      root="$HOME/${entry#"$DOTFILES_DIR/$package/"}"
+      for existing in "${roots[@]}"; do
+        [[ "$root" == "$existing" ]] && continue 2
+      done
+      roots+=("$root")
+    done < <(find "$DOTFILES_DIR/$package" -mindepth 1 -maxdepth 1 -print0)
+  done
+
+  for root in "${roots[@]}"; do
+    [[ -e "$root" || -L "$root" ]] || continue
+    while IFS= read -r -d '' link; do
+      [[ -e "$link" ]] && continue
+      link_value="$(readlink "$link")"
+      if [[ "$link_value" == /* ]]; then
+        candidate="$link_value"
+      else
+        candidate="$(dirname "$link")/$link_value"
+      fi
+      resolved="$(normalize_path "$candidate")"
+      if [[ "$resolved" == "$DOTFILES_DIR"/* ]]; then
+        unlink "$link"
+        ok "Removed stale link: $link"
+      fi
+    done < <(find "$root" -type l -print0 2>/dev/null)
+  done
+}
+
+cleanup_stale_links() {
+  info "Cleaning stale dotfile links..."
+  if [[ -f "$STOW_MANIFEST" ]]; then
+    cleanup_manifest_links
+  else
+    cleanup_legacy_links "$@"
+  fi
+}
+
+write_stow_manifest() {
+  local package source source_rel target_rel target link_value
+  local manifest_tmp
+
+  mkdir -p "$STOW_STATE_DIR"
+  manifest_tmp="$(mktemp "$STOW_STATE_DIR/.stow-links.XXXXXX")"
+
+  for package in "$@"; do
+    while IFS= read -r -d '' source; do
+      target_rel="${source#"$DOTFILES_DIR/$package/"}"
+      is_ignored_stow_path "$target_rel" && continue
+      target="$HOME/$target_rel"
+      [[ -L "$target" ]] || continue
+
+      source_rel="$package/$target_rel"
+      link_value="$(readlink "$target")"
+      printf '%s\t%s\t%s\n' "$source_rel" "$target_rel" "$link_value" >>"$manifest_tmp"
+    done < <(find "$DOTFILES_DIR/$package" \( -type f -o -type l \) -print0)
+  done
+
+  mv "$manifest_tmp" "$STOW_MANIFEST"
 }
 
 
@@ -88,6 +226,7 @@ link_dotfiles() {
   info "Linking dotfiles..."
   local failed=0
   local package
+  local -a packages=()
 
   # Every non-hidden top-level directory is a stow package. This means adding
   # a new tool only requires creating its package directory.
@@ -96,6 +235,12 @@ link_dotfiles() {
     [[ "$package" == .* ]] && continue
     is_skipped_package "$package" && continue
 
+    packages+=("$package")
+  done
+
+  cleanup_stale_links "${packages[@]}"
+
+  for package in "${packages[@]}"; do
     # --restow is idempotent. --adopt moves existing target files into this
     # package before linking them, which is intentional for this personal
     # configuration repository.
@@ -117,6 +262,7 @@ link_dotfiles() {
     err "$failed package(s) failed to link — resolve conflicts and rerun"
     return 1
   else
+    write_stow_manifest "${packages[@]}"
     ok "All dotfiles linked"
   fi
 }
