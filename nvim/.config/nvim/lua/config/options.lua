@@ -15,6 +15,7 @@ opt.copyindent = true
 
 -- ui
 opt.winblend = 0
+-- opt.listchars = { tab = "▸ ", trail = "-" }
 
 -----
 

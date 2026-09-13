@@ -279,12 +279,28 @@ link_dotfiles() {
   fi
 }
 
-# ── create local config templates if missing ───────────────────────
+# ── create local config files if missing ───────────────────────────
 create_local_configs() {
-  info "Creating local config templates if missing..."
+  info "Creating local config files if missing..."
 
-  _ensure_template() {
+  _ensure_local_file() {
     local path="$1" content="$2"
+
+    # Local config files must remain regular files under $HOME. If an older
+    # installation left a symlink here, materialize its contents before
+    # continuing so stow can never be the owner of these machine-local files.
+    if [[ -L "$path" ]]; then
+      local materialized
+      if [[ -f "$path" ]]; then
+        materialized="$(mktemp "${path}.XXXXXX")"
+        cp -p "$path" "$materialized"
+        mv -f "$materialized" "$path"
+        ok "Materialized local file: $path"
+      else
+        unlink "$path"
+      fi
+    fi
+
     if [[ ! -f "$path" ]]; then
       mkdir -p "$(dirname "$path")"
       printf '%s\n' "$content" >"$path"
@@ -294,11 +310,11 @@ create_local_configs() {
     fi
   }
 
-  _ensure_template "$HOME/.config/git/config.local" '[user]
+  _ensure_local_file "$HOME/.config/git/config.local" '[user]
     name = Your Name
     email = your.email@example.com'
 
-  _ensure_template "$HOME/.config/zsh/.local.env" '# Local environment variables (not tracked by git)
+  _ensure_local_file "$HOME/.config/zsh/.local.env" '# Local environment variables (not tracked by git)
 # source "${XDG_DATA_HOME}/clashctl/scripts/cmd/clashctl.sh"
 # export TP_API_KEY="your-api-key"'
 }
@@ -309,8 +325,8 @@ main() {
   install_stow
   install_brew
   run_brew_bundle
-  link_dotfiles
   create_local_configs
+  link_dotfiles
   ok "Done! Restart your shell or run: source ~/.zshenv"
 }
 
