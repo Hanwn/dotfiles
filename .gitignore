@@ -3,7 +3,6 @@ zsh/.config/zsh/.zsh_history
 zsh/.config/zsh/.zhistory
 zsh/.config/zsh/.zcompdump*
 zsh/.config/zsh/.zcompcache
-nvim/.config/nvim/lazyvim.json
 nvim/.config/nvim/lazy-lock.json
 yazi/.config/yazi/flavors/
 git/.config/git/config.local
