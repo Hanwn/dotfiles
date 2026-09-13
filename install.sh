@@ -113,32 +113,44 @@ cleanup_legacy_links() {
   # The first run has no manifest. Limit the compatibility scan to top-level
   # targets exposed by the current packages instead of walking all of $HOME.
   for package in "$@"; do
-    while IFS= read -r -d '' entry; do
+    # Use globs here instead of find -mindepth/-maxdepth: BSD find on macOS
+    # does not support those GNU-specific options.
+    for entry in \
+      "$DOTFILES_DIR/$package"/* \
+      "$DOTFILES_DIR/$package"/.[!.]* \
+      "$DOTFILES_DIR/$package"/..?*; do
+      [[ -e "$entry" || -L "$entry" ]] || continue
       root="$HOME/${entry#"$DOTFILES_DIR/$package/"}"
-      for existing in "${roots[@]}"; do
-        [[ "$root" == "$existing" ]] && continue 2
-      done
+      # Bash 3.2 (the system Bash on macOS) treats an empty array expansion as
+      # an unbound variable when nounset is enabled.
+      if ((${#roots[@]} > 0)); then
+        for existing in "${roots[@]}"; do
+          [[ "$root" == "$existing" ]] && continue 2
+        done
+      fi
       roots+=("$root")
-    done < <(find "$DOTFILES_DIR/$package" -mindepth 1 -maxdepth 1 -print0)
+    done
   done
 
-  for root in "${roots[@]}"; do
-    [[ -e "$root" || -L "$root" ]] || continue
-    while IFS= read -r -d '' link; do
-      [[ -e "$link" ]] && continue
-      link_value="$(readlink "$link")"
-      if [[ "$link_value" == /* ]]; then
-        candidate="$link_value"
-      else
-        candidate="$(dirname "$link")/$link_value"
-      fi
-      resolved="$(normalize_path "$candidate")"
-      if [[ "$resolved" == "$DOTFILES_DIR"/* ]]; then
-        unlink "$link"
-        ok "Removed stale link: $link"
-      fi
-    done < <(find "$root" -type l -print0 2>/dev/null)
-  done
+  if ((${#roots[@]} > 0)); then
+    for root in "${roots[@]}"; do
+      [[ -e "$root" || -L "$root" ]] || continue
+      while IFS= read -r -d '' link; do
+        [[ -e "$link" ]] && continue
+        link_value="$(readlink "$link")"
+        if [[ "$link_value" == /* ]]; then
+          candidate="$link_value"
+        else
+          candidate="$(dirname "$link")/$link_value"
+        fi
+        resolved="$(normalize_path "$candidate")"
+        if [[ "$resolved" == "$DOTFILES_DIR"/* ]]; then
+          unlink "$link"
+          ok "Removed stale link: $link"
+        fi
+      done < <(find "$root" -type l -print0 2>/dev/null)
+    done
+  fi
 }
 
 cleanup_stale_links() {
