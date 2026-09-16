@@ -3,8 +3,13 @@ return {
 	main = "ibl",
 	---@module "ibl"
 	---@type ibl.config
-	opts = {},
-	config = function()
-		require("ibl").setup()
+	opts = {
+		indent = {
+			char = "▎",
+			tab_char = "▎",
+		},
+	},
+	config = function(_, opts)
+		require("ibl").setup(opts)
 	end,
 }
