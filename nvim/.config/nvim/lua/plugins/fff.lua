@@ -1,37 +1,41 @@
 return {
 	"dmtrKovalenko/fff.nvim",
+	lazy = false,
 	build = function()
-		-- downloads a prebuilt binary or falls back to cargo build
 		require("fff.download").download_or_build_binary()
 	end,
-	-- for nixos:
-	-- build = "nix run .#release",
-	opts = {},
-	lazy = false, -- the plugin lazy-initialises itself
+	opts = {
+		layout = {
+			prompt_position = "top",
+		},
+		debug = {
+			show_scores = true,
+		},
+	},
 	keys = {
 		{
-			"ff",
+			"<leader>ff",
 			function()
 				require("fff").find_files()
 			end,
-			desc = "FFFind files",
+			desc = "Find files (fff)",
 		},
 		{
-			"fg",
+			"<leader>sg",
 			function()
 				require("fff").live_grep()
 			end,
 			desc = "LiFFFe grep",
 		},
 		{
-			"fz",
+			"<leader>fz",
 			function()
 				require("fff").live_grep({ grep = { modes = { "fuzzy", "plain" } } })
 			end,
 			desc = "Live fffuzy grep",
 		},
 		{
-			"fc",
+			"<leader>fc",
 			function()
 				require("fff").live_grep({ query = vim.fn.expand("<cword>") })
 			end,

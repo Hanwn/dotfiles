@@ -20,8 +20,9 @@ opt.winblend = 0
 -----
 
 vim.g.autoformat = false
-vim.g.lazyvim_picker = "fzf"
+vim.g.lazyvim_picker = "snacks"
 vim.g.lazyvim_check_order = false
+vim.g.snacks_animate = false
 
 -- 禁用未使用的 language providers，加快启动并消除 checkhealth 警告
 vim.g.loaded_node_provider = 0
