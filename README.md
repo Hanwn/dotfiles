@@ -10,6 +10,13 @@ Install local development tools and apply dotfiles on the host machine:
 ./install.sh
 ```
 
+To skip software package installation/update while still applying dotfile
+links, use `--skip-packages` (GNU Stow must already be installed):
+
+```bash
+./install.sh --skip-packages
+```
+
 ## Development Infrastructure
 
 `docker-compose.yaml` only manages external development infrastructure. It

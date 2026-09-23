@@ -6,12 +6,43 @@ cd "$DOTFILES_DIR"
 
 STOW_STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles"
 STOW_MANIFEST="$STOW_STATE_DIR/stow-links.tsv"
+SKIP_PACKAGES=0
 
 # ── output helpers ──────────────────────────────────────────────────
 info() { printf "\033[1;34m[INFO]\033[0m %s\n" "$*"; }
 ok() { printf "\033[1;32m[ OK ]\033[0m %s\n" "$*"; }
 warn() { printf "\033[1;33m[WARN]\033[0m %s\n" "$*" >&2; }
 err() { printf "\033[1;31m[ERR]\033[0m  %s\n" "$*" >&2; }
+
+usage() {
+  cat <<'USAGE'
+Usage: ./install.sh [OPTIONS]
+
+Options:
+  --skip-packages  Skip installing/updating software packages; still create dotfile links.
+  -h, --help       Show this help.
+USAGE
+}
+
+parse_args() {
+  while (($# > 0)); do
+    case "$1" in
+      --skip-packages)
+        SKIP_PACKAGES=1
+        ;;
+      -h | --help)
+        usage
+        exit 0
+        ;;
+      *)
+        err "Unknown option: $1"
+        usage >&2
+        exit 2
+        ;;
+    esac
+    shift
+  done
+}
 
 # Packages to skip when stowing. Add a package here only when it should not
 # expose files under $HOME.
@@ -209,6 +240,14 @@ install_stow() {
   ok "stow installed"
 }
 
+require_stow() {
+  if ! command -v stow &>/dev/null; then
+    err "stow is required when using --skip-packages — install it manually before retrying"
+    return 1
+  fi
+  ok "stow ready: $(stow --version | head -1)"
+}
+
 # ── install Homebrew ─────────────────────────────────────────────────
 install_brew() {
   if command -v brew &>/dev/null; then
@@ -321,10 +360,18 @@ create_local_configs() {
 
 # ── main ────────────────────────────────────────────────────────────
 main() {
+  parse_args "$@"
+
   info "Starting dotfiles setup from $DOTFILES_DIR"
-  install_stow
-  install_brew
-  run_brew_bundle
+  if ((SKIP_PACKAGES)); then
+    info "Skipping software package installation/update"
+    require_stow
+  else
+    install_stow
+    install_brew
+    run_brew_bundle
+  fi
+
   create_local_configs
   link_dotfiles
   ok "Done! Restart your shell or run: source ~/.zshenv"
