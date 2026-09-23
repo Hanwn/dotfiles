@@ -30,8 +30,4 @@ export MANPATH="${XDG_DATA_HOME}/man:${MANPATH:-}"
 typeset -U path fpath manpath
 
 # machine-local overrides (gitignored)
-local_env_file="${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}/.local.env"
-if [[ -r "$local_env_file" ]]; then
-  source "$local_env_file"
-fi
-unset local_env_file
+[[ -r "${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}/.local.env" ]] && source "${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}/.local.env"

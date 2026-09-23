@@ -1,15 +1,7 @@
 source "${ZDOTDIR}/.aliases.zsh"
 
 autoload -Uz compinit
-local zcompdump="${ZDOTDIR}/.zcompdump"
-if [[ -f "$zcompdump" ]]; then
-  compinit -C -d "$zcompdump"
-else
-  compinit -d "$zcompdump"
-fi
-
-# starship config
-export STARSHIP_CONFIG="${XDG_CONFIG_HOME}/starship/starship.toml"
+compinit -d "${ZDOTDIR}/.zcompdump"
 
 # bat as manpager
 if command -v bat >/dev/null 2>&1; then
