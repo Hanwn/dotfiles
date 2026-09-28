@@ -1,6 +1,5 @@
 return {
-	"hanwn/spelunk.nvim",
-	branch = "fix/snacks-split-actions",
+	"EvWilson/spelunk.nvim",
 	event = "VeryLazy",
 	dependencies = {
 		"folke/snacks.nvim", -- Optional: for enhanced fuzzy search capabilities
