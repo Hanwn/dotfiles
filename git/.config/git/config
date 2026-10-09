@@ -1,25 +1,39 @@
 [core]
     editor = nvim
-	pager = hunk pager
-	quotepath = false
+    pager = hunk pager
+    quotepath = false
+
+[color]
+    ui = auto
+
+[column]
+    ui = auto
+
+[status]
+    showUntrackedFiles = all
+    showStash = true
 
 [init]
     defaultBranch = main
 
 [push]
     autoSetupRemote = true
+    followTags = true
 
 [pull]
     rebase = true
 
 [fetch]
     prune = true
+    pruneTags = true
 
 [rebase]
     autoStash = true
+    autoSquash = true
 
 [rerere]
     enabled = true
+    autoupdate = true
 
 [branch]
     sort = -committerdate
@@ -28,9 +42,10 @@
     sort = -version:refname
 
 [diff]
-	tool = hunk
+    tool = hunk
     algorithm = histogram
     colorMoved = default
+    renames = true
 
 [difftool "nvimdiff"]
     cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
@@ -58,6 +73,15 @@
     path = ~/.config/git/config.local
 
 [alias]
-    la = log --all --pretty=format:'%C(yellow)%h %C(cyan)%ad %C(green)%an %C(reset)%s' --date=short
+    st = status --short --branch
+    co = checkout
+    sw = switch
+    br = branch
+    ci = commit
+    amend = commit --amend --no-edit
+    unstage = restore --staged
+    last = log -1 HEAD --stat
+    la = log --all --date=short --pretty=format:'%C(yellow)%h %C(cyan)%ad %C(green)%an%C(reset) %s%C(auto)%d'
     lg = log --oneline --graph --decorate --all
-
+    ll = log --graph --pretty=format:'%C(yellow)%h%Creset %C(cyan)%ad%Creset %Cgreen%an%Creset %s%C(auto)%d' --date=short
+    filelog = log --follow --stat --

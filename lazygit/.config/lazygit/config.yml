@@ -9,11 +9,12 @@ gui:
   showCommandLog: false
   commitLength:
     show: true
-  branchColors:
-    "docs": "#11aaff"
-    "dev*": "#ebad6c"
-    "main": "#af92fc"
-    "master": "#af92fc"
+  theme:
+    branchColorPatterns:
+      "^docs(/|$)": "#11aaff"
+      "^dev\\*(/|$)": "#ebad6c"
+      "^main(/|$)": "#af92fc"
+      "^master(/|$)": "#af92fc"
 disableStartupPopups: true
 git:
   parseEmoji: true
@@ -30,14 +31,3 @@ git:
 os:
   editPreset: "nvim"
 promptToReturnFromSubprocess: false
-customCommands:
-  - key: "R"
-    context: "commits"
-    command: "git rebase -i {{.SelectedLocalCommit.Hash}}"
-    description: "Interactive rebase from here"
-    output: terminal
-  - key: "F"
-    context: "commits"
-    command: "git commit --fixup={{.SelectedLocalCommit.Hash}} && git rebase -i --autosquash {{.SelectedLocalCommit.Hash}}~1"
-    description: "Fixup into this commit"
-    loadingText: "Fixing up..."
