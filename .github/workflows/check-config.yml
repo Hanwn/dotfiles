@@ -32,8 +32,8 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v5
-      - name: Install stow
-        run: sudo apt-get update && sudo apt-get install -y stow
+      - name: Install stow and zsh
+        run: sudo apt-get update && sudo apt-get install -y stow zsh
       - name: Run install.sh
         timeout-minutes: 30
         run: bash install.sh
@@ -67,8 +67,13 @@ jobs:
           zsh -c 'echo "✓ zsh loaded successfully"' || (echo "✗ zsh failed to start"; exit 1)
 
           echo "=== Checking zsh syntax ==="
-          for f in ~/.config/zsh/*.zsh ~/.config/zsh/conf.d/*.zsh; do
-            [ -f "$f" ] && zsh -n "$f" && echo "✓ $(basename $f)" || (echo "✗ $(basename $f) has syntax errors"; exit 1)
+          for f in ~/.zshenv ~/.config/zsh/.zshrc ~/.config/zsh/.zprofile ~/.config/zsh/.aliases.zsh ~/.config/zsh/conf.d/*.zsh; do
+            if zsh -n "$f"; then
+              echo "✓ $(basename "$f")"
+            else
+              echo "✗ $(basename "$f") has syntax errors"
+              exit 1
+            fi
           done
 
       - name: Test idempotency
@@ -116,8 +121,13 @@ jobs:
           zsh -c 'echo "✓ zsh loaded successfully"' || (echo "✗ zsh failed to start"; exit 1)
 
           echo "=== Checking zsh syntax ==="
-          for f in ~/.config/zsh/*.zsh ~/.config/zsh/conf.d/*.zsh; do
-            [ -f "$f" ] && zsh -n "$f" && echo "✓ $(basename $f)" || (echo "✗ $(basename $f) has syntax errors"; exit 1)
+          for f in ~/.zshenv ~/.config/zsh/.zshrc ~/.config/zsh/.zprofile ~/.config/zsh/.aliases.zsh ~/.config/zsh/conf.d/*.zsh; do
+            if zsh -n "$f"; then
+              echo "✓ $(basename "$f")"
+            else
+              echo "✗ $(basename "$f") has syntax errors"
+              exit 1
+            fi
           done
 
       - name: Test idempotency
