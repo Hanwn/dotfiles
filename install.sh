@@ -80,11 +80,10 @@ is_ignored_path() {
 }
 
 build_stow_ignore_args() {
-  local -n result_array=$1
   local pattern
 
   for pattern in "${STOW_IGNORE_PATTERNS[@]}"; do
-    result_array+=("--ignore=$pattern")
+    echo "--ignore=$pattern"
   done
 }
 
@@ -214,7 +213,9 @@ link_dotfiles() {
   local -a packages=() stow_ignore_args=()
 
   # Build stow ignore arguments from patterns
-  build_stow_ignore_args stow_ignore_args
+  while IFS= read -r arg; do
+    stow_ignore_args+=("$arg")
+  done < <(build_stow_ignore_args)
 
   # Collect packages to stow
   for package in */; do

@@ -19,8 +19,8 @@ jobs:
         run: bash -n install.sh && echo "✓ install.sh syntax OK"
       - name: Validate Brewfile
         run: |
-          grep -E '^brew "' Brewfile | head -3 && echo "✓ Brewfile looks valid"
-      - name: Validate config files
+          grep -E '^(brew|tap|cask) "' Brewfile | head -5 && echo "✓ Brewfile looks valid"
+      - name: Validate TOML config files
         run: |
           find . -name "*.toml" ! -path "./.git/*" | while read f; do
             python3 -c "import tomllib; tomllib.load(open('$f','rb'))" && echo "✓ $f" || (echo "✗ $f"; exit 1)
@@ -37,22 +37,45 @@ jobs:
       - name: Run install.sh
         timeout-minutes: 30
         run: bash install.sh
-      - name: Verify
+      - name: Verify installation
         run: |
-          # load brew environment
-          for brew_path in /home/linuxbrew/.linuxbrew/bin/brew /opt/homebrew/bin/brew /usr/local/bin/brew "$HOME/.linuxbrew/bin/brew"; do
-            if [ -x "$brew_path" ]; then
-              eval "$("$brew_path" shellenv)"
-              break
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+          echo "=== Checking binaries ==="
+          for tool in zsh git tmux nvim starship fzf rg fd bat eza zoxide stow; do
+            if command -v $tool &>/dev/null; then
+              echo "✓ $tool"
+            else
+              echo "✗ $tool missing"
+              exit 1
             fi
           done
-          for t in zsh git tmux nvim starship fzf rg fd bat eza zoxide stow; do
-            command -v $t &>/dev/null && echo "✓ $t" || echo "✗ $t"
+
+          echo "=== Checking dotfiles ==="
+          [ -f ~/.zshenv ] && echo "✓ ~/.zshenv" || (echo "✗ ~/.zshenv missing"; exit 1)
+          [ -d ~/.config/zsh ] && echo "✓ ~/.config/zsh" || (echo "✗ ~/.config/zsh missing"; exit 1)
+          [ -f ~/.config/git/config.local ] && echo "✓ config.local" || (echo "✗ config.local missing"; exit 1)
+          [ -f ~/.config/zsh/.local.env ] && echo "✓ .local.env" || (echo "✗ .local.env missing"; exit 1)
+
+          echo "=== Verifying Brewfile hash tracking ==="
+          [ -f ~/.local/state/dotfiles/brewfile.sha256 ] && echo "✓ Brewfile hash recorded" || echo "⚠ Brewfile hash not found"
+
+      - name: Test zsh configuration
+        run: |
+          echo "=== Testing zsh startup ==="
+          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+          zsh -c 'echo "✓ zsh loaded successfully"' || (echo "✗ zsh failed to start"; exit 1)
+
+          echo "=== Checking zsh syntax ==="
+          for f in ~/.config/zsh/*.zsh ~/.config/zsh/conf.d/*.zsh; do
+            [ -f "$f" ] && zsh -n "$f" && echo "✓ $(basename $f)" || (echo "✗ $(basename $f) has syntax errors"; exit 1)
           done
-          [ -f ~/.zshenv ] && echo "✓ ~/.zshenv" || echo "✗ ~/.zshenv missing"
-          [ -d ~/.config/zsh ] && echo "✓ ~/.config/zsh" || echo "✗ ~/.config/zsh missing"
-          [ -f ~/.config/git/config.local ] && echo "✓ config.local" || echo "✗ config.local missing"
-          [ -f ~/.config/zsh/.local.env ] && echo "✓ .local.env" || echo "✗ .local.env missing"
+
+      - name: Test idempotency
+        run: |
+          echo "=== Running install.sh second time ==="
+          bash install.sh
+          echo "✓ Second run completed without errors"
 
   test-macos:
     name: Test on macOS
@@ -63,19 +86,42 @@ jobs:
       - name: Run install.sh
         timeout-minutes: 30
         run: bash install.sh
-      - name: Verify
+      - name: Verify installation
         run: |
-          # load brew environment
-          for brew_path in /home/linuxbrew/.linuxbrew/bin/brew /opt/homebrew/bin/brew /usr/local/bin/brew "$HOME/.linuxbrew/bin/brew"; do
-            if [ -x "$brew_path" ]; then
-              eval "$("$brew_path" shellenv)"
-              break
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+
+          echo "=== Checking binaries ==="
+          for tool in zsh git tmux nvim starship fzf rg fd bat eza zoxide stow; do
+            if command -v $tool &>/dev/null; then
+              echo "✓ $tool"
+            else
+              echo "✗ $tool missing"
+              exit 1
             fi
           done
-          for t in zsh git tmux nvim starship fzf rg fd bat eza zoxide stow; do
-            command -v $t &>/dev/null && echo "✓ $t" || echo "✗ $t"
+
+          echo "=== Checking dotfiles ==="
+          [ -f ~/.zshenv ] && echo "✓ ~/.zshenv" || (echo "✗ ~/.zshenv missing"; exit 1)
+          [ -d ~/.config/zsh ] && echo "✓ ~/.config/zsh" || (echo "✗ ~/.config/zsh missing"; exit 1)
+          [ -f ~/.config/git/config.local ] && echo "✓ config.local" || (echo "✗ config.local missing"; exit 1)
+          [ -f ~/.config/zsh/.local.env ] && echo "✓ .local.env" || (echo "✗ .local.env missing"; exit 1)
+
+          echo "=== Verifying Brewfile hash tracking ==="
+          [ -f ~/.local/state/dotfiles/brewfile.sha256 ] && echo "✓ Brewfile hash recorded" || echo "⚠ Brewfile hash not found"
+
+      - name: Test zsh configuration
+        run: |
+          echo "=== Testing zsh startup ==="
+          eval "$(/opt/homebrew/bin/brew shellenv)"
+          zsh -c 'echo "✓ zsh loaded successfully"' || (echo "✗ zsh failed to start"; exit 1)
+
+          echo "=== Checking zsh syntax ==="
+          for f in ~/.config/zsh/*.zsh ~/.config/zsh/conf.d/*.zsh; do
+            [ -f "$f" ] && zsh -n "$f" && echo "✓ $(basename $f)" || (echo "✗ $(basename $f) has syntax errors"; exit 1)
           done
-          [ -f ~/.zshenv ] && echo "✓ ~/.zshenv" || echo "✗ ~/.zshenv missing"
-          [ -d ~/.config/zsh ] && echo "✓ ~/.config/zsh" || echo "✗ ~/.config/zsh missing"
-          [ -f ~/.config/git/config.local ] && echo "✓ config.local" || echo "✗ config.local missing"
-          [ -f ~/.config/zsh/.local.env ] && echo "✓ .local.env" || echo "✗ .local.env missing"
+
+      - name: Test idempotency
+        run: |
+          echo "=== Running install.sh second time ==="
+          bash install.sh
+          echo "✓ Second run completed without errors"
