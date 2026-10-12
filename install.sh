@@ -4,8 +4,8 @@ set -euo pipefail
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$DOTFILES_DIR"
 
-STOW_STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles"
-STOW_MANIFEST="$STOW_STATE_DIR/stow-links.tsv"
+STATE_DIR="${XDG_STATE_HOME:-$HOME/.local/state}/dotfiles"
+BREWFILE_HASH_FILE="$STATE_DIR/brewfile.sha256"
 SKIP_PACKAGES=0
 
 # ── output helpers ──────────────────────────────────────────────────
@@ -51,12 +51,12 @@ SKIP_PKGS=(local)
 # Runtime and machine-local files must stay local to the target machine.
 # Keeping these out of stow also prevents ignored files in the checkout from
 # being linked accidentally.
-STOW_IGNORE_ARGS=(
-  --ignore='(^|/)\.local\.env$'
-  --ignore='(^|/)config\.local$'
-  --ignore='(^|/)\.zcompdump.*$'
-  --ignore='(^|/)\.zhistory$'
-  --ignore='(^|/)\.zcompcache$'
+STOW_IGNORE_PATTERNS=(
+  '(^|/)\.local\.env$'
+  '(^|/)config\.local$'
+  '(^|/)\.zcompdump.*$'
+  '(^|/)\.zhistory$'
+  '(^|/)\.zcompcache$'
 )
 
 is_skipped_package() {
@@ -69,91 +69,41 @@ is_skipped_package() {
   return 1
 }
 
-is_ignored_stow_path() {
+is_ignored_path() {
   local path="$1"
+  local pattern
 
-  [[ "$path" =~ (^|/)\.local\.env$ ]] ||
-    [[ "$path" =~ (^|/)config\.local$ ]] ||
-    [[ "$path" =~ (^|/)\.zcompdump.*$ ]] ||
-    [[ "$path" =~ (^|/)\.zhistory$ ]] ||
-    [[ "$path" =~ (^|/)\.zcompcache$ ]]
-}
-
-is_safe_relative_path() {
-  local path="$1"
-
-  [[ -n "$path" && "$path" != /* && "$path" != ".." && "$path" != ../* && "$path" != */../* && "$path" != */.. ]]
-}
-
-normalize_path() {
-  local path="$1"
-  local part normalized=""
-  local last
-  local -a parts=() stack=()
-
-  IFS='/' read -r -a parts <<<"$path"
-  for part in "${parts[@]}"; do
-    case "$part" in
-      '' | '.') ;;
-      '..')
-        if ((${#stack[@]} > 0)); then
-          last=$((${#stack[@]} - 1))
-          unset "stack[$last]"
-        fi
-        ;;
-      *) stack+=("$part") ;;
-    esac
+  for pattern in "${STOW_IGNORE_PATTERNS[@]}"; do
+    [[ "$path" =~ $pattern ]] && return 0
   done
+  return 1
+}
 
-  for part in "${stack[@]}"; do
-    normalized="$normalized/$part"
+build_stow_ignore_args() {
+  local -n result_array=$1
+  local pattern
+
+  for pattern in "${STOW_IGNORE_PATTERNS[@]}"; do
+    result_array+=("--ignore=$pattern")
   done
-  printf '%s\n' "${normalized:-/}"
 }
 
-cleanup_manifest_links() {
-  local source_rel target_rel recorded_link
-  local source target current_link
-
-  while IFS=$'\t' read -r source_rel target_rel recorded_link; do
-    if ! is_safe_relative_path "$source_rel" || ! is_safe_relative_path "$target_rel"; then
-      warn "Skipping unsafe stow manifest entry: $target_rel"
-      continue
-    fi
-
-    source="$DOTFILES_DIR/$source_rel"
-    target="$HOME/$target_rel"
-    [[ -e "$source" || -L "$source" ]] && continue
-    [[ -L "$target" ]] || continue
-
-    current_link="$(readlink "$target")"
-    if [[ "$current_link" == "$recorded_link" ]]; then
-      unlink "$target"
-      ok "Removed stale link: $target"
-    else
-      warn "Preserving changed link: $target"
-    fi
-  done <"$STOW_MANIFEST"
-}
-
-cleanup_legacy_links() {
-  local package entry root existing
-  local link link_value candidate resolved
+cleanup_stale_links() {
+  info "Cleaning stale dotfile links..."
+  local package entry root link link_target
   local -a roots=()
+  local existing removed=0
 
-  # The first run has no manifest. Limit the compatibility scan to top-level
-  # targets exposed by the current packages instead of walking all of $HOME.
+  # Collect top-level target directories from all packages
   for package in "$@"; do
-    # Use globs here instead of find -mindepth/-maxdepth: BSD find on macOS
-    # does not support those GNU-specific options.
     for entry in \
       "$DOTFILES_DIR/$package"/* \
       "$DOTFILES_DIR/$package"/.[!.]* \
       "$DOTFILES_DIR/$package"/..?*; do
       [[ -e "$entry" || -L "$entry" ]] || continue
       root="$HOME/${entry#"$DOTFILES_DIR/$package/"}"
-      # Bash 3.2 (the system Bash on macOS) treats an empty array expansion as
-      # an unbound variable when nounset is enabled.
+
+      # Bash 3.2 (macOS system bash) treats empty array as unbound with nounset
       if ((${#roots[@]} > 0)); then
         for existing in "${roots[@]}"; do
           [[ "$root" == "$existing" ]] && continue 2
@@ -163,59 +113,28 @@ cleanup_legacy_links() {
     done
   done
 
+  # Find and remove broken symlinks pointing to this dotfiles repo
   if ((${#roots[@]} > 0)); then
     for root in "${roots[@]}"; do
       [[ -e "$root" || -L "$root" ]] || continue
       while IFS= read -r -d '' link; do
-        [[ -e "$link" ]] && continue
-        link_value="$(readlink "$link")"
-        if [[ "$link_value" == /* ]]; then
-          candidate="$link_value"
-        else
-          candidate="$(dirname "$link")/$link_value"
+        link_target="$(readlink "$link" 2>/dev/null || true)"
+        if [[ "$link_target" == "$DOTFILES_DIR"/* ]] || [[ "$link_target" == ../* ]]; then
+          # Check if target exists (relative links need to be resolved from link dir)
+          if [[ ! -e "$link" ]]; then
+            unlink "$link"
+            ok "Removed stale link: $link"
+            removed=$((removed + 1))
+          fi
         fi
-        resolved="$(normalize_path "$candidate")"
-        if [[ "$resolved" == "$DOTFILES_DIR"/* ]]; then
-          unlink "$link"
-          ok "Removed stale link: $link"
-        fi
-      done < <(find "$root" -type l -print0 2>/dev/null)
+      done < <(find "$root" -type l -print0 2>/dev/null || true)
     done
   fi
-}
 
-cleanup_stale_links() {
-  info "Cleaning stale dotfile links..."
-  if [[ -f "$STOW_MANIFEST" ]]; then
-    cleanup_manifest_links
-  else
-    cleanup_legacy_links "$@"
+  if ((removed > 0)); then
+    ok "Removed $removed stale link(s)"
   fi
 }
-
-write_stow_manifest() {
-  local package source source_rel target_rel target link_value
-  local manifest_tmp
-
-  mkdir -p "$STOW_STATE_DIR"
-  manifest_tmp="$(mktemp "$STOW_STATE_DIR/.stow-links.XXXXXX")"
-
-  for package in "$@"; do
-    while IFS= read -r -d '' source; do
-      target_rel="${source#"$DOTFILES_DIR/$package/"}"
-      is_ignored_stow_path "$target_rel" && continue
-      target="$HOME/$target_rel"
-      [[ -L "$target" ]] || continue
-
-      source_rel="$package/$target_rel"
-      link_value="$(readlink "$target")"
-      printf '%s\t%s\t%s\n' "$source_rel" "$target_rel" "$link_value" >>"$manifest_tmp"
-    done < <(find "$DOTFILES_DIR/$package" \( -type f -o -type l \) -print0)
-  done
-
-  mv "$manifest_tmp" "$STOW_MANIFEST"
-}
-
 
 # ── install stow via system package manager ──────────────────────────
 install_stow() {
@@ -267,8 +186,23 @@ install_brew() {
 
 # ── brew bundle ──────────────────────────────────────────────────────
 run_brew_bundle() {
+  local current_hash previous_hash
+
+  current_hash="$(shasum -a 256 "$DOTFILES_DIR/Brewfile" | cut -d' ' -f1)"
+
+  if [[ -f "$BREWFILE_HASH_FILE" ]]; then
+    previous_hash="$(cat "$BREWFILE_HASH_FILE")"
+    if [[ "$current_hash" == "$previous_hash" ]]; then
+      ok "Brewfile unchanged, skipping brew bundle"
+      return
+    fi
+  fi
+
   info "Running brew bundle..."
   brew bundle --file="$DOTFILES_DIR/Brewfile"
+
+  mkdir -p "$STATE_DIR"
+  echo "$current_hash" > "$BREWFILE_HASH_FILE"
   ok "brew bundle done"
 }
 
@@ -277,15 +211,16 @@ link_dotfiles() {
   info "Linking dotfiles..."
   local failed=0
   local package
-  local -a packages=()
+  local -a packages=() stow_ignore_args=()
 
-  # Every non-hidden top-level directory is a stow package. This means adding
-  # a new tool only requires creating its package directory.
+  # Build stow ignore arguments from patterns
+  build_stow_ignore_args stow_ignore_args
+
+  # Collect packages to stow
   for package in */; do
     package="${package%/}"
     [[ "$package" == .* ]] && continue
     is_skipped_package "$package" && continue
-
     packages+=("$package")
   done
 
@@ -300,7 +235,7 @@ link_dotfiles() {
       --no-folding \
       --adopt \
       --target="$HOME" \
-      "${STOW_IGNORE_ARGS[@]}" \
+      "${stow_ignore_args[@]}" \
       "$package"; then
       ok "Linked: $package"
     else
@@ -313,7 +248,6 @@ link_dotfiles() {
     err "$failed package(s) failed to link — resolve conflicts and rerun"
     return 1
   else
-    write_stow_manifest "${packages[@]}"
     ok "All dotfiles linked"
   fi
 }
