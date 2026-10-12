@@ -1,11 +1,10 @@
 [settings]
 pin = true
-status.show_tools = false
-status.show_env = false
-node.corepack = true
-
 
 [tools]
 go = "1.25.0"
 node = "25"
 pnpm = "12.3.4"
+
+codex = "latest"
+claude = "latest"
