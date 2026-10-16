@@ -12,24 +12,24 @@ fi
 # Use ~~ as the trigger sequence instead of the default **
 export FZF_COMPLETION_TRIGGER='**'
 
-# Raycast Dark 配色 + 全局外观/交互
 export FZF_DEFAULT_OPTS="
-  --height=60%
-  --layout=reverse
-  --border=rounded
-  --margin=0,1
-  --info=inline-right
-  --prompt='> '
-  --pointer='▶'
-  --marker='✓'
-  --bind='ctrl-y:accept'
-  --bind='ctrl-u:preview-half-page-up'
-  --bind='ctrl-d:preview-half-page-down'
-  --bind='ctrl-/:toggle-preview'
-  --color=fg:#ffffff,bg:-1,hl:#56c2ff
-  --color=fg+:#ffffff,bg+:-1,hl+:#56c2ff
-  --color=info:#56c2ff,prompt:#56c2ff,pointer:#ff5360
-  --color=marker:#59d499,spinner:#ffc531,header:#56c2ff
+  --height=60% 
+  --layout=reverse 
+  --border=rounded 
+  --margin=0,1 
+  --info=inline-right 
+  --prompt='> ' 
+  --pointer='▶' 
+  --marker='✓' 
+  --bind='ctrl-y:accept' 
+  --bind='ctrl-u:preview-half-page-up' 
+  --bind='ctrl-d:preview-half-page-down' 
+  --bind='ctrl-/:toggle-preview' 
+  --color=bg+:#313244,bg:-1,spinner:#F5E0DC,hl:#F38BA8 
+  --color=fg:#CDD6F4,header:#F38BA8,info:#CBA6F7,pointer:#F5E0DC 
+  --color=marker:#B4BEFE,fg+:#CDD6F4,prompt:#CBA6F7,hl+:#F38BA8 
+  --color=selected-bg:#45475A 
+  --color=border:#6C7086,label:#CDD6F4
 "
 
 # Options for completion

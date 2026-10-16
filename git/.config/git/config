@@ -51,12 +51,16 @@
     cmd = "nvim -d \"$LOCAL\" \"$REMOTE\""
 
 [merge]
-    tool = nvimdiff
-    conflictStyle = zdiff3
+	tool = ec
+  conflictStyle = zdiff3
 
 [mergetool]
     keepBackup = false
     prompt = false
+
+[mergetool "ec"]
+	cmd = ec \"$BASE\" \"$LOCAL\" \"$REMOTE\" \"$MERGED\"
+  trustExitCode = false
 
 [mergetool "nvimdiff"]
     cmd = "nvim -d \"$LOCAL\" \"$MERGED\" \"$REMOTE\" -c 'wincmd = | set diffopt+=vertical'"
