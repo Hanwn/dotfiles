@@ -219,4 +219,3 @@ symbol = " "
 
 [os]
 disabled = true
-style = "bg:color_orange fg:color_fg0"

@@ -15,13 +15,12 @@ if (( $+commands[eza] )); then
     'eza --tree --color=always --icons --level=2 $realpath | head -200'
 fi
 # custom fzf flags
-zstyle ':fzf-tab:*' fzf-flags --color=fg:1,fg+:2 --bind=tab:accept --height=~100%
+zstyle ':fzf-tab:*' fzf-flags --bind=tab:accept --height=~100%
 
 # To make fzf-tab follow FZF_DEFAULT_OPTS
 zstyle ':fzf-tab:*' use-fzf-default-opts on
 # switch group using `<` and `>`
 zstyle ':fzf-tab:*' switch-group '<' '>'
-zstyle ':fzf-tab:*' default-color $'\033[94m'
 
 # 进程补全预览
 zstyle ':fzf-tab:complete:(kill|ps):argument-rest' fzf-preview \

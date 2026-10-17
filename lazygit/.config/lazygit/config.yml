@@ -9,12 +9,6 @@ gui:
   showCommandLog: false
   commitLength:
     show: true
-  theme:
-    branchColorPatterns:
-      "^docs(/|$)": "#11aaff"
-      "^dev\\*(/|$)": "#ebad6c"
-      "^main(/|$)": "#af92fc"
-      "^master(/|$)": "#af92fc"
 disableStartupPopups: true
 git:
   parseEmoji: true
@@ -23,7 +17,7 @@ git:
   # skipHookPrefix: "WIP"
   diffRenderers:
     - colorArg: always
-      command: delta --paging=never --syntax-theme="Catppuccin Mocha"
+      command: delta --paging=never
   # log 显示 graph
   log:
     showGraph: always
