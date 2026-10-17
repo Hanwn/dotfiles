@@ -48,5 +48,5 @@ brew "curl"
 # ai tools
 brew "cc-switch-cli"
 brew "rtk"
-brew "codex"
+cask "codex"
 cask "claude-code"
