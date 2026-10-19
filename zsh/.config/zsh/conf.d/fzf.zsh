@@ -25,7 +25,7 @@ export FZF_DEFAULT_OPTS="
   --bind='ctrl-u:preview-half-page-up' 
   --bind='ctrl-d:preview-half-page-down' 
   --bind='ctrl-/:toggle-preview' 
-  --color=base16
+  --color=base16,bg+:-1,selected-bg:-1
 "
 
 # Options for completion
