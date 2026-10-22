@@ -25,11 +25,21 @@ return {
 		}
 
 		local branch = { "branch", icon = { "", color = { fg = "#A6D4DE" } }, "|" }
+		local recording = {
+			function()
+				local register = vim.fn.reg_recording()
+				return register ~= "" and (" " .. register) or ""
+			end,
+			cond = function()
+				return vim.fn.reg_recording() ~= ""
+			end,
+			color = { fg = "#f5391c", gui = "bold" },
+		}
 
 		lualine.setup({
 			icons_enabled = true,
 			options = {
-				component_separators = { left = "|", right = "|" },
+				component_separators = { left = "", right = "" },
 				section_separators = { left = "", right = "" },
 			},
 			sections = {
@@ -37,6 +47,7 @@ return {
 				lualine_b = { branch },
 				lualine_c = { diff, filename },
 				lualine_x = {
+					recording,
 					{
 						lazy_status.updates,
 						cond = lazy_status.has_updates,
@@ -47,6 +58,12 @@ return {
 					{ "filetype" },
 				},
 			},
+		})
+
+		vim.api.nvim_create_autocmd({ "RecordingEnter", "RecordingLeave" }, {
+			callback = function()
+				lualine.refresh({ place = { "statusline" } })
+			end,
 		})
 	end,
 }

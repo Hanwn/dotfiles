@@ -27,11 +27,11 @@ if [[ -o zle ]]; then
     done
   fi
 
-  # Re-sourcing .zshrc must not wrap Starship's ZLE hooks repeatedly.
-  if [[ -z ${__DOTFILES_STARSHIP_INITIALIZED:-} ]] && command -v starship >/dev/null 2>&1; then
-    eval "$(starship init zsh)"
-    typeset -g __DOTFILES_STARSHIP_INITIALIZED=1
+  if [[ "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select" || \
+      "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select-wrapped" ]]; then
+    zle -N zle-keymap-select "";
   fi
+  eval "$(starship init zsh)"
 
   command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 
