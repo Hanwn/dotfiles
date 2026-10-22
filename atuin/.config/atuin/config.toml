@@ -4,10 +4,6 @@ show_help = false
 show_preview = false
 show_tabs = true
 
-# Search & Filter
-workspaces = true
-filter_mode_shell_up_key_binding = "global"
-
 # Behavior
 enter_accept = false
 keymap_mode = "vim-insert"
@@ -15,3 +11,7 @@ keymap_mode = "vim-insert"
 # AI
 [ai]
 enabled = true
+
+[search]
+shells = "all"
+filter_mode = "host"

@@ -22,7 +22,7 @@ vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
 -- Keep LazyVim's mutable extras/news state out of the dotfiles repository.
-vim.g.lazyvim_explorer = "snacks"
+vim.g.lazyvim_explorer = "neo-tree"
 
 -- Setup lazy.nvim
 require("lazy").setup({
