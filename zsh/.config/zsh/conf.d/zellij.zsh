@@ -1,2 +1,0 @@
-# zellij config
-ZELLIJ_CONFIG_DIR="${XDG_CONFIG_HOME}/zellij"

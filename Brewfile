@@ -46,7 +46,6 @@ brew "witr"
 brew "curl"
 
 # ai tools
-brew "cc-switch-cli"
 brew "rtk"
 cask "codex"
 cask "claude-code"

@@ -1,1 +1,0 @@
-export CC_SWITCH_CONFIG_DIR="${XDG_CONFIG_HOME}/cc-switch"

@@ -1,32 +1,17 @@
-## 搜索行为
-# 默认搜索模式：prefix | fulltext | fuzzy | skim
-search_mode = "fuzzy"
-# 搜索过滤：global（所有机器）| host | session | directory
-filter_mode = "host"
-# 上箭头过滤模式（优先显示当前目录历史）
-filter_mode_shell_up_key_binding = "directory"
-
-## UI
-style = "full"
-# inline_height = 30  # 仅 compact 模式生效，full 模式忽略
-show_preview = false
+# Interface
+style = "compact"
 show_help = false
+show_preview = false
+show_tabs = true
 
-## 历史
-max_history_length = 100000
-history_filter = [
-    "^cd",
-    "^ls",
-    "^exit",
-    "^clear",
-    "^bg",
-    "^fg",
-]
-
-## 同步
-auto_sync = false
-sync_frequency = "0"
-
-## 其他
+# Search & Filter
 workspaces = true
-exit_mode = "return-original"
+filter_mode_shell_up_key_binding = "global"
+
+# Behavior
+enter_accept = false
+keymap_mode = "vim-insert"
+
+# AI
+[ai]
+enabled = true
