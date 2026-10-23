@@ -1,8 +1,9 @@
 onboarding = false
 
 [theme]
-name = "terminal"
+name = "catppuccin"
 
+auto_switch = false
 [ui]
 agent_panel_scope = "all"
 sidebar_width = 32
@@ -29,4 +30,28 @@ pane_history = true
 
 [keys]
 copy_mode = "prefix+v"
-split_vertical = "prefix+|"
+split_vertical = "prefix+%"
+
+[[keys.command]]
+key = "ctrl+h"
+type = "plugin_action"
+command = "smart-splits-backend-herdr.left"
+description = "navigate left (vim/herdr)"
+
+[[keys.command]]
+key = "ctrl+j"
+type = "plugin_action"
+command = "smart-splits-backend-herdr.down"
+description = "navigate down (vim/herdr)"
+
+[[keys.command]]
+key = "ctrl+k"
+type = "plugin_action"
+command = "smart-splits-backend-herdr.up"
+description = "navigate up (vim/herdr)"
+
+[[keys.command]]
+key = "ctrl+l"
+type = "plugin_action"
+command = "smart-splits-backend-herdr.right"
+description = "navigate right (vim/herdr)"
