@@ -253,6 +253,37 @@ link_dotfiles() {
   fi
 }
 
+# ── link Herdr smart-splits backend ──────────────────────────────────
+link_herdr_smart_splits_backend() {
+  local plugin_id="smart-splits-backend-herdr"
+  local plugin_dir="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/lazy/$plugin_id"
+
+  if ! command -v herdr &>/dev/null; then
+    warn "Skipping Herdr smart-splits backend: herdr is not installed"
+    return
+  fi
+
+  if [[ ! -f "$plugin_dir/herdr-plugin.toml" ]]; then
+    warn "Skipping Herdr smart-splits backend: Neovim plugin not installed at $plugin_dir"
+    return
+  fi
+
+  if herdr plugin list 2>/dev/null | grep -Fq -- "$plugin_id"; then
+    ok "Herdr smart-splits backend already linked"
+  elif herdr plugin link "$plugin_dir"; then
+    ok "Linked Herdr smart-splits backend"
+  else
+    warn "Could not link Herdr smart-splits backend"
+    return
+  fi
+
+  if herdr plugin enable "$plugin_id" >/dev/null; then
+    ok "Enabled Herdr smart-splits backend"
+  else
+    warn "Could not enable Herdr smart-splits backend"
+  fi
+}
+
 # ── create local config files if missing ───────────────────────────
 create_local_configs() {
   info "Creating local config files if missing..."
@@ -309,6 +340,7 @@ main() {
 
   create_local_configs
   link_dotfiles
+  link_herdr_smart_splits_backend
   ok "Done! Restart your shell or run: source ~/.zshenv"
 }
 

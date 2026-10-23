@@ -5,6 +5,7 @@ return {
 	opts = {
 		move = { at_edge = "stop" },
 		mux = {
+			warn_if_unusable = false,
 			backend = {
 				"smart-splits-backend-herdr",
 				"smart-splits-backend-tmux",

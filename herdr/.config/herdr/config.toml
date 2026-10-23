@@ -11,12 +11,14 @@ sidebar_max_width = 48
 mouse_capture = true
 mouse_scroll_lines = 1
 confirm_close = true
+prompt_new_tab_name = false
 
+status_indicators = "symbols"
 [ui.sound]
 enabled = true
 
 [ui.toast]
-delivery = "herdr"
+delivery = "terminal"
 
 [terminal]
 default_shell = "zsh"
@@ -31,6 +33,8 @@ pane_history = true
 [keys]
 copy_mode = "prefix+v"
 split_vertical = "prefix+%"
+goto = "prefix+s"
+settings = "prefix+shift+s"
 
 [[keys.command]]
 key = "ctrl+h"
