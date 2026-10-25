@@ -27,18 +27,18 @@ USAGE
 parse_args() {
   while (($# > 0)); do
     case "$1" in
-      --skip-packages)
-        SKIP_PACKAGES=1
-        ;;
-      -h | --help)
-        usage
-        exit 0
-        ;;
-      *)
-        err "Unknown option: $1"
-        usage >&2
-        exit 2
-        ;;
+    --skip-packages)
+      SKIP_PACKAGES=1
+      ;;
+    -h | --help)
+      usage
+      exit 0
+      ;;
+    *)
+      err "Unknown option: $1"
+      usage >&2
+      exit 2
+      ;;
     esac
     shift
   done
@@ -201,7 +201,7 @@ run_brew_bundle() {
   brew bundle --file="$DOTFILES_DIR/Brewfile"
 
   mkdir -p "$STATE_DIR"
-  echo "$current_hash" > "$BREWFILE_HASH_FILE"
+  echo "$current_hash" >"$BREWFILE_HASH_FILE"
   ok "brew bundle done"
 }
 
@@ -250,37 +250,6 @@ link_dotfiles() {
     return 1
   else
     ok "All dotfiles linked"
-  fi
-}
-
-# ── link Herdr smart-splits backend ──────────────────────────────────
-link_herdr_smart_splits_backend() {
-  local plugin_id="smart-splits-backend-herdr"
-  local plugin_dir="${XDG_DATA_HOME:-$HOME/.local/share}/nvim/lazy/$plugin_id"
-
-  if ! command -v herdr &>/dev/null; then
-    warn "Skipping Herdr smart-splits backend: herdr is not installed"
-    return
-  fi
-
-  if [[ ! -f "$plugin_dir/herdr-plugin.toml" ]]; then
-    warn "Skipping Herdr smart-splits backend: Neovim plugin not installed at $plugin_dir"
-    return
-  fi
-
-  if herdr plugin list 2>/dev/null | grep -Fq -- "$plugin_id"; then
-    ok "Herdr smart-splits backend already linked"
-  elif herdr plugin link "$plugin_dir"; then
-    ok "Linked Herdr smart-splits backend"
-  else
-    warn "Could not link Herdr smart-splits backend"
-    return
-  fi
-
-  if herdr plugin enable "$plugin_id" >/dev/null; then
-    ok "Enabled Herdr smart-splits backend"
-  else
-    warn "Could not enable Herdr smart-splits backend"
   fi
 }
 
@@ -340,7 +309,6 @@ main() {
 
   create_local_configs
   link_dotfiles
-  link_herdr_smart_splits_backend
   ok "Done! Restart your shell or run: source ~/.zshenv"
 }
 

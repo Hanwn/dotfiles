@@ -45,7 +45,10 @@ return {
 			sections = {
 				lualine_a = { mode },
 				lualine_b = { branch },
-				lualine_c = { diff, filename },
+				lualine_c = {
+					diff,
+					{ LazyVim.lualine.pretty_path() },
+				},
 				lualine_x = {
 					recording,
 					{
@@ -55,7 +58,7 @@ return {
 					},
 					-- { "encoding",},
 					-- { "fileformat" },
-					{ "filetype" },
+					{ "filetype", icon_only = true, separator = "", padding = { left = 1, right = 0 } },
 				},
 			},
 		})
