@@ -17,5 +17,3 @@ if command -v brew >/dev/null 2>&1; then
     export HOMEBREW_NO_ENV_HINTS=1
 fi
 
-# mise (version manager)
-command -v mise &> /dev/null && eval "$(mise activate zsh)"

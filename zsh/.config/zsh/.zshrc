@@ -1,39 +1,22 @@
-source "${ZDOTDIR}/.aliases.zsh"
-
 # Initialize zsh completion and keep its cache under ZDOTDIR.
 autoload -Uz compinit
 compinit -d "${ZDOTDIR}/.zcompdump"
 
-# bat as manpager
-if command -v bat >/dev/null 2>&1; then
-  export MANPAGER="bat -l man -p"
-elif command -v batcat >/dev/null 2>&1; then
-  export MANPAGER="batcat -l man -p"
-fi
-
 # These plugins and prompt tools use ZLE, so skip them in interactive shells
 # without a terminal, such as `zsh -i -c ...`.
 if [[ -o zle ]]; then
-  # Load Sheldon plugins before local configuration that may use them.
-  if command -v sheldon >/dev/null 2>&1; then
-    eval "$(sheldon source)"
-  fi
+  # Load Sheldon plugins plus local config (see plugins.toml).
+  command -v sheldon >/dev/null 2>&1 && eval "$(sheldon source)"
 
-  # Keep local ZLE/plugin settings after Sheldon has loaded its plugins.
-  if [[ -d "${ZDOTDIR}/conf.d" ]]; then
-    for f in "${ZDOTDIR}"/conf.d/*.zsh(N); do
-      [[ -r "$f" ]] || continue
-      source "$f"
-    done
-  fi
-
-  if [[ "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select" || \
-      "${widgets[zle-keymap-select]#user:}" == "starship_zle-keymap-select-wrapped" ]]; then
-    zle -N zle-keymap-select "";
-  fi
-  eval "$(starship init zsh)"
+  # Guard against re-running `starship init zsh` when .zshrc is re-sourced
+  # (starship#3418). Check for the function it defines, since functions do not
+  # leak into child shells (unlike STARSHIP_SHELL, which starship exports).
+  (( $+functions[starship_zle-keymap-select] )) || eval "$(starship init zsh)"
 
   command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
+  # mise (version manager). --shims is faster than the default hook-env mode;
+  # only use the default if you rely on `[env]` PATH additions in .mise.toml.
+  command -v mise &> /dev/null && eval "$(mise activate zsh --shims)"
 
   # Atuin is initialized here, after fzf plugins, so its Ctrl-R binding wins.
   if command -v atuin >/dev/null 2>&1; then

@@ -17,6 +17,13 @@ export PAGER="less"
 export LESS="-R -M --shift 5"
 export LESSHISTFILE="-"
 
+# bat as manpager
+if command -v bat >/dev/null 2>&1; then
+ export MANPAGER="bat -l man -p"
+elif command -v batcat >/dev/null 2>&1; then
+  export MANPAGER="batcat -l man -p"
+fi
+
 # GPG (for signed git commits in an interactive terminal)
 if [[ -t 1 ]]; then
   export GPG_TTY="${TTY:-$(tty)}"
@@ -31,3 +38,4 @@ typeset -U path fpath manpath
 
 # machine-local overrides (gitignored)
 [[ -r "${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}/.local.env" ]] && source "${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}/.local.env"
+[[ -r "${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}/.env" ]] && source "${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}/.env"

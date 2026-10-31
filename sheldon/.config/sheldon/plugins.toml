@@ -2,6 +2,10 @@ shell = "zsh"
 
 [plugins]
 
+# zsh-defer must come before any plugin using `apply = ["defer"]`.
+[plugins.zsh-defer]
+github = "romkatv/zsh-defer"
+
 # zsh-vi-mode
 [plugins.zsh-vi-mode]
 github = "jeffreytse/zsh-vi-mode"
@@ -10,14 +14,24 @@ github = "jeffreytse/zsh-vi-mode"
 [plugins.fzf-tab]
 github = "Aloxaf/fzf-tab"
 
-# fast-syntax-highlighting
-[plugins.fast-syntax-highlighting]
-github = "zdharma-continuum/fast-syntax-highlighting"
-
-# zsh-history-substring-search
-[plugins.zsh-history-substring-search]
-github = "zsh-users/zsh-history-substring-search"
+# zsh-patina (Rust daemon-based syntax highlighting). The plugin.zsh just
+# activates the `zsh-patina` binary, which must be installed separately:
+#   brew install zsh-patina
+[plugins.zsh-patina]
+github = "michel-kraemer/zsh-patina"
 
 # zsh-autosuggestions
 [plugins.zsh-autosuggestions]
 github = "zsh-users/zsh-autosuggestions"
+apply = ["defer"]
+
+# Local shell/plugin configuration (formerly conf.d/*.zsh).
+# Kept last so it loads after every plugin.
+[plugins.local-config]
+local = "~/.config/zsh/conf.d"
+use = ["*.zsh"]
+
+# Custom `defer` template: load plugins asynchronously after the first prompt
+# using romkatv/zsh-defer, instead of sourcing them synchronously.
+[templates]
+defer = "{{ hooks?.pre | nl }}{% for file in files %}zsh-defer source \"{{ file }}\"\n{% endfor %}{{ hooks?.post | nl }}"
