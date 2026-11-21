@@ -11,7 +11,6 @@ SKIP_PACKAGES=0
 # ── output helpers ──────────────────────────────────────────────────
 info() { printf "\033[1;34m[INFO]\033[0m %s\n" "$*"; }
 ok() { printf "\033[1;32m[ OK ]\033[0m %s\n" "$*"; }
-warn() { printf "\033[1;33m[WARN]\033[0m %s\n" "$*" >&2; }
 err() { printf "\033[1;31m[ERR]\033[0m  %s\n" "$*" >&2; }
 
 usage() {
@@ -44,10 +43,6 @@ parse_args() {
   done
 }
 
-# Packages to skip when stowing. Add a package here only when it should not
-# expose files under $HOME.
-SKIP_PKGS=(local)
-
 # Runtime and machine-local files must stay local to the target machine.
 # Keeping these out of stow also prevents ignored files in the checkout from
 # being linked accidentally.
@@ -59,26 +54,6 @@ STOW_IGNORE_PATTERNS=(
   '(^|/)\.zcompcache$'
 )
 
-is_skipped_package() {
-  local package="$1"
-  local skipped
-
-  for skipped in "${SKIP_PKGS[@]}"; do
-    [[ "$package" == "$skipped" ]] && return 0
-  done
-  return 1
-}
-
-is_ignored_path() {
-  local path="$1"
-  local pattern
-
-  for pattern in "${STOW_IGNORE_PATTERNS[@]}"; do
-    [[ "$path" =~ $pattern ]] && return 0
-  done
-  return 1
-}
-
 build_stow_ignore_args() {
   local pattern
 
@@ -89,27 +64,17 @@ build_stow_ignore_args() {
 
 cleanup_stale_links() {
   info "Cleaning stale dotfile links..."
-  local package entry root link link_target
+  local entry root link link_target
   local -a roots=()
-  local existing removed=0
+  local removed=0
 
-  # Collect top-level target directories from all packages
-  for package in "$@"; do
-    for entry in \
-      "$DOTFILES_DIR/$package"/* \
-      "$DOTFILES_DIR/$package"/.[!.]* \
-      "$DOTFILES_DIR/$package"/..?*; do
-      [[ -e "$entry" || -L "$entry" ]] || continue
-      root="$HOME/${entry#"$DOTFILES_DIR/$package/"}"
-
-      # Bash 3.2 (macOS system bash) treats empty array as unbound with nounset
-      if ((${#roots[@]} > 0)); then
-        for existing in "${roots[@]}"; do
-          [[ "$root" == "$existing" ]] && continue 2
-        done
-      fi
-      roots+=("$root")
-    done
+  # The home package owns these top-level paths under $HOME.
+  for entry in \
+    "$DOTFILES_DIR/home"/* \
+    "$DOTFILES_DIR/home"/.[!.]* \
+    "$DOTFILES_DIR/home"/..?*; do
+    [[ -e "$entry" || -L "$entry" ]] || continue
+    roots+=("$HOME/${entry#"$DOTFILES_DIR/home/"}")
   done
 
   # Find and remove broken symlinks pointing to this dotfiles repo
@@ -208,48 +173,29 @@ run_brew_bundle() {
 # ── stow dotfiles ───────────────────────────────────────────────────
 link_dotfiles() {
   info "Linking dotfiles..."
-  local failed=0
-  local package
-  local -a packages=() stow_ignore_args=()
+  local -a stow_ignore_args=()
 
   # Build stow ignore arguments from patterns
   while IFS= read -r arg; do
     stow_ignore_args+=("$arg")
   done < <(build_stow_ignore_args)
 
-  # Collect packages to stow
-  for package in */; do
-    package="${package%/}"
-    [[ "$package" == .* ]] && continue
-    is_skipped_package "$package" && continue
-    packages+=("$package")
-  done
+  cleanup_stale_links
 
-  cleanup_stale_links "${packages[@]}"
-
-  for package in "${packages[@]}"; do
-    # --restow is idempotent. --adopt moves existing target files into this
-    # package before linking them, which is intentional for this personal
-    # configuration repository.
-    if stow \
-      --restow \
-      --no-folding \
-      --adopt \
-      --target="$HOME" \
-      "${stow_ignore_args[@]}" \
-      "$package"; then
-      ok "Linked: $package"
-    else
-      warn "Failed to link: $package"
-      failed=$((failed + 1))
-    fi
-  done
-
-  if ((failed > 0)); then
-    err "$failed package(s) failed to link — resolve conflicts and rerun"
-    return 1
-  else
+  # --restow is idempotent. --adopt moves existing target files into this
+  # package before linking them, which is intentional for this personal
+  # configuration repository.
+  if stow \
+    --restow \
+    --no-folding \
+    --adopt \
+    --target="$HOME" \
+    "${stow_ignore_args[@]}" \
+    home; then
     ok "All dotfiles linked"
+  else
+    err "Failed to link dotfiles — resolve conflicts and rerun"
+    return 1
   fi
 }
 
