@@ -1,0 +1,10 @@
+[mgr]
+prepend_keymap = [
+	# Preview scrolling: <C-d> / <C-u>
+	{ on = "<C-d>", run = "seek 5",  desc = "Seek down 5 units in the preview" },
+	{ on = "<C-u>", run = "seek -5", desc = "Seek up 5 units in the preview" },
+
+	# Disable the old J / K preview seeking
+	{ on = "J", run = "noop", desc = "Disabled" },
+	{ on = "K", run = "noop", desc = "Disabled" },
+]
