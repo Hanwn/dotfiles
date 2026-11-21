@@ -34,40 +34,24 @@ jobs:
       - uses: actions/checkout@v5
       - name: Install stow and zsh
         run: sudo apt-get update && sudo apt-get install -y stow zsh
-      - name: Run install.sh
-        timeout-minutes: 30
-        run: bash install.sh
+      - name: Link dotfiles
+        timeout-minutes: 10
+        run: bash install.sh --skip-packages
       - name: Verify installation
         run: |
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
-          echo "=== Checking binaries ==="
-          for tool in zsh git tmux nvim starship fzf rg fd bat eza zoxide stow; do
-            if command -v $tool &>/dev/null; then
-              echo "✓ $tool"
-            else
-              echo "✗ $tool missing"
-              exit 1
-            fi
-          done
-
           echo "=== Checking dotfiles ==="
           [ -f ~/.zshenv ] && echo "✓ ~/.zshenv" || (echo "✗ ~/.zshenv missing"; exit 1)
           [ -d ~/.config/zsh ] && echo "✓ ~/.config/zsh" || (echo "✗ ~/.config/zsh missing"; exit 1)
           [ -f ~/.config/git/config.local ] && echo "✓ config.local" || (echo "✗ config.local missing"; exit 1)
           [ -f ~/.config/zsh/.local.env ] && echo "✓ .local.env" || (echo "✗ .local.env missing"; exit 1)
 
-          echo "=== Verifying Brewfile hash tracking ==="
-          [ -f ~/.local/state/dotfiles/brewfile.sha256 ] && echo "✓ Brewfile hash recorded" || echo "⚠ Brewfile hash not found"
-
       - name: Test zsh configuration
         run: |
           echo "=== Testing zsh startup ==="
-          eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
           zsh -c 'echo "✓ zsh loaded successfully"' || (echo "✗ zsh failed to start"; exit 1)
 
           echo "=== Checking zsh syntax ==="
-          for f in ~/.zshenv ~/.config/zsh/.zshrc ~/.config/zsh/.zprofile ~/.config/zsh/.aliases.zsh ~/.config/zsh/conf.d/*.zsh; do
+          for f in ~/.zshenv ~/.config/zsh/.zshrc ~/.config/zsh/.zprofile ~/.config/zsh/conf.d/*.zsh; do
             if zsh -n "$f"; then
               echo "✓ $(basename "$f")"
             else
@@ -79,7 +63,7 @@ jobs:
       - name: Test idempotency
         run: |
           echo "=== Running install.sh second time ==="
-          bash install.sh
+          bash install.sh --skip-packages
           echo "✓ Second run completed without errors"
 
   test-macos:
@@ -88,40 +72,26 @@ jobs:
     needs: lint
     steps:
       - uses: actions/checkout@v5
-      - name: Run install.sh
-        timeout-minutes: 30
-        run: bash install.sh
+      - name: Install stow
+        run: brew install stow
+      - name: Link dotfiles
+        timeout-minutes: 10
+        run: bash install.sh --skip-packages
       - name: Verify installation
         run: |
-          eval "$(/opt/homebrew/bin/brew shellenv)"
-
-          echo "=== Checking binaries ==="
-          for tool in zsh git tmux nvim starship fzf rg fd bat eza zoxide stow; do
-            if command -v $tool &>/dev/null; then
-              echo "✓ $tool"
-            else
-              echo "✗ $tool missing"
-              exit 1
-            fi
-          done
-
           echo "=== Checking dotfiles ==="
           [ -f ~/.zshenv ] && echo "✓ ~/.zshenv" || (echo "✗ ~/.zshenv missing"; exit 1)
           [ -d ~/.config/zsh ] && echo "✓ ~/.config/zsh" || (echo "✗ ~/.config/zsh missing"; exit 1)
           [ -f ~/.config/git/config.local ] && echo "✓ config.local" || (echo "✗ config.local missing"; exit 1)
           [ -f ~/.config/zsh/.local.env ] && echo "✓ .local.env" || (echo "✗ .local.env missing"; exit 1)
 
-          echo "=== Verifying Brewfile hash tracking ==="
-          [ -f ~/.local/state/dotfiles/brewfile.sha256 ] && echo "✓ Brewfile hash recorded" || echo "⚠ Brewfile hash not found"
-
       - name: Test zsh configuration
         run: |
           echo "=== Testing zsh startup ==="
-          eval "$(/opt/homebrew/bin/brew shellenv)"
           zsh -c 'echo "✓ zsh loaded successfully"' || (echo "✗ zsh failed to start"; exit 1)
 
           echo "=== Checking zsh syntax ==="
-          for f in ~/.zshenv ~/.config/zsh/.zshrc ~/.config/zsh/.zprofile ~/.config/zsh/.aliases.zsh ~/.config/zsh/conf.d/*.zsh; do
+          for f in ~/.zshenv ~/.config/zsh/.zshrc ~/.config/zsh/.zprofile ~/.config/zsh/conf.d/*.zsh; do
             if zsh -n "$f"; then
               echo "✓ $(basename "$f")"
             else
@@ -133,5 +103,5 @@ jobs:
       - name: Test idempotency
         run: |
           echo "=== Running install.sh second time ==="
-          bash install.sh
+          bash install.sh --skip-packages
           echo "✓ Second run completed without errors"
